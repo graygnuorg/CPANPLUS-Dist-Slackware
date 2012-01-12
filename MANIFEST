@@ -1,0 +1,15 @@
+.perlcriticrc
+Build.PL
+Changes
+ignore.txt
+lib/CPANPLUS/Dist/Slackware.pm
+lib/CPANPLUS/Dist/Slackware/PackageDescription.pm
+LICENSE
+MANIFEST			This list of files
+README
+t/00-load.t
+t/boilerplate.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
+TODO

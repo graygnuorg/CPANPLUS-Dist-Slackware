@@ -1,0 +1,46 @@
+CPANPLUS-Dist-Slackware version 0.01
+
+This CPANPLUS plugin creates Slackware compatible packages from Perl
+distributions.
+
+    $ cpanp
+    CPAN Terminal> i Some::Module --format=CPANPLUS::Dist::Slackware
+
+    $ cpan2dist --format CPANPLUS::Dist::Slackware Some::Module
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Build.PL
+	./Build
+	./Build test
+	./Build install
+
+DEPENDENCIES
+
+The sudo command is required.  The fakeroot command is recommended.
+
+Perl 5.10 provides all required Perl modules.
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc CPANPLUS::Dist::Slackware
+
+If you want to hack on the source it might be a good idea to grab the
+latest version with git using the command:
+
+    git clone git://github.com/voegelas/CPANPLUS-Dist-Slackware.git
+
+LICENSE AND COPYRIGHT
+
+Copyright (c) 2012 Andreas Voegele
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+See http://dev.perl.org/licenses/ for more information.
+

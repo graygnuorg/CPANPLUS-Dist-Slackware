@@ -1,0 +1,46 @@
+* Most likely a bug in another module, but when running "cpan2dist --verbose
+  --install Task::Kensho" the build failed on the first run (it succeeded on
+ the second run) with the following output:
+
+  Running [/usr/bin/perl5.14.2 /usr/bin/cpanp-run-perl \
+  /home/andreas/.cpanplus/5.14.2/build/Class-Singleton-1.4/Makefile.PL]...
+  Checking if your kit is complete...
+  Looks good
+  Writing Makefile for Class::Singleton
+  Writing MYMETA.yml and MYMETA.json
+  Running [/usr/bin/make]...
+  cp lib/Class/Singleton.pm blib/lib/Class/Singleton.pm
+  Manifying blib/man3/Class::Singleton.3
+  Running [/usr/bin/make test]...
+  PERL_DL_NONLAZY=1 /usr/bin/perl5.14.2 "-MExtUtils::Command::MM" "-e" \
+  "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+  t/singleton.t ..
+  All 29 subtests passed
+
+  Test Summary Report
+  -------------------
+  t/singleton.t (Wstat: 0 Tests: 29 Failed: 0)
+  Parse errors: Tests out of sequence.  Found (1) but expected (29)
+  Files=1, Tests=29,  0 wallclock secs ( 0.04 usr...)
+  Result: FAIL
+  Failed 1/1 test programs. 0/29 subtests failed.
+  make: *** [test_dynamic] Fehler 255
+
+* Make sure that system files like /bin/sh cannot be overwritten by malicious
+  distributions.
+
+* _summary_from_pod() does not return a summary for
+  Class::C3::Componentised, Debug::ShowStuff WWW::Mechanize::TreeBuilder and
+  possibly other modules.
+
+* Automatically remove the staging directory from /tmp/CPANPLUS after
+  the package was built successfully?
+
+* List non-standard shared libraries that are used by XS modules in
+  README.SLACKWARE?
+
+* It seems that Alien::wxWidgets needs to be removed from the system before
+  the package can be re-built.
+
+* The Clipboard distribution depends on xclip, which is available at
+  slackbuilds.org.

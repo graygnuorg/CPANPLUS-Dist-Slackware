@@ -1,0 +1,20 @@
+# Don't require close() invocations to be within 9 lines of the open() call.
+# Unfortunately, the "lines" setting is ignored by Perl::Critic 1.117 so this
+# policy has to be disabled completely.
+[-InputOutput::RequireBriefOpen]
+
+# Allow escaped meta-characters in regexps.  For people coming from a Unix
+# background, they are often more readable than character classes.
+[-RegularExpressions::ProhibitEscapedMetacharacters]
+
+# Allow one-line regexps without /x.
+[RegularExpressions::RequireExtendedFormatting]
+minimum_regex_length_to_complain_about = 50
+
+# Don't ask for long regexps to be split into qr// chunks.  Formatting long
+# regexps with m{}x is fine.
+[-RegularExpressions::ProhibitComplexRegexes]
+
+# Accept regexps without /s and /m.  Regexps often aren't line-oriented.
+[-RegularExpressions::RequireDotMatchAnything]
+[-RegularExpressions::RequireLineBoundaryMatching]
