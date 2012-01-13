@@ -88,12 +88,6 @@ sub prepare {
 
     umask oct '022';
 
-    # Warn the user that the package might be built with Perl libraries in
-    # non-standard directories.
-    if ( $ENV{PERL5LIB} ) {
-        msg( loc(q{Building packages with PERL5LIB set!}) );
-    }
-
     {
 
         # CPANPLUS::Dist:MM does not accept multiple options in
@@ -912,11 +906,6 @@ or not configured.
 =item B<< You do not have '/sbin/makepkg'... >>
 
 The Slackware package management commands are not installed.
-
-=item B<< Building packages with PERL5LIB set! >>
-
-This warns you that the package might be built with Perl libraries in
-non-standard directories.
 
 =item B<< Could not chdir into DIR >>
 
