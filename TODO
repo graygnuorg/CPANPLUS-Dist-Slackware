@@ -1,3 +1,5 @@
+* Test on slackware64.
+
 * Most likely a bug in another module, but when running "cpan2dist --verbose
   --install Task::Kensho" the build failed on the first run (it succeeded on
  the second run) with the following output:
@@ -29,7 +31,7 @@
 * Make sure that system files like /bin/sh cannot be overwritten by malicious
   distributions.
 
-* _summary_from_pod() does not return a summary for
+* _summary_from_pod() does not return summaries for
   Class::C3::Componentised, Debug::ShowStuff WWW::Mechanize::TreeBuilder and
   possibly other modules.
 

@@ -90,7 +90,7 @@ sub prepare {
     {
 
         # CPANPLUS::Dist:MM does not accept multiple options in
-        # makemakerflags.  Thus, all options have to be passed via
+        # makemakerflags.  Thus all options have to be passed via
         # environment variables.
         local $ENV{PERL_MM_OPT}   = $PERL_MM_OPT;
         local $ENV{PERL_MB_OPT}   = $PERL_MB_OPT;
