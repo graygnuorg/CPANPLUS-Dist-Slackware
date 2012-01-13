@@ -177,7 +177,9 @@ sub _summary_from_meta {
     for (qw(META.yml META.json)) {
         my $metafile = File::Spec->catfile( $wrksrc, $_ );
         if ( -f $metafile ) {
-            my $distmeta = Parse::CPAN::Meta->load_file($metafile);
+            my $distmeta;
+            eval { $distmeta = Parse::CPAN::Meta::LoadFile($metafile) }
+                or next;
             if (   $distmeta
                 && $distmeta->{abstract}
                 && $distmeta->{abstract} !~ /unknown/i )
