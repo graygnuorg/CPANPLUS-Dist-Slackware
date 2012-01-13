@@ -790,7 +790,7 @@ Packages may also be created from the command-line.  Example:
 
 The C<sudo> command must be installed and configured.  If the C<fakeroot>
 command is installed, packages will be built without the help of C<sudo>.
-Package installation still requires root privileges though.
+Installing packages still requires root privileges though.
 
 =head2 Documentation files
 
@@ -804,7 +804,7 @@ Few Perl distributions provide configuration files in F</etc> but if such a
 distribution is updated you have to check for new configuration files.  The
 package's F<README.SLACKWARE> file lists the configuration files.  Updated
 configuration files have got the filename extension ".new" and must be merged
-or copied by the system administrator.
+by the system administrator.
 
 =head1 SUBROUTINES/METHODS
 
@@ -813,7 +813,7 @@ or copied by the system administrator.
 =item B<< CPANPLUS::Dist::Slackware->format_available >>
 
 Returns a boolean indicating whether or not Slackware's package management
-tools are available.
+commands are available.
 
     $is_available = CPANPLUS::Dist::Slackware->format_available();
 
@@ -892,7 +892,7 @@ or not configured.
 
 =item B<< You do not have '/sbin/makepkg'... >>
 
-The Slackware package management tools are not installed.
+The Slackware package management commands are not installed.
 
 =item B<< Could not chdir into DIR >>
 
@@ -911,7 +911,7 @@ permissions!
 
 =item B<< Could not write to file FILE >>
 
-Is your disk full?
+Is a file system, e.g. F</tmp> full?
 
 =item B<< Could not compress file FILE >>
 
@@ -931,7 +931,8 @@ An external command failed to execute.
 
 =item B<< No dir found to operate on! >>
 
-For some reason, the Perl distribution's archive has not been extracted.
+For some reason, the Perl distribution's archive has not been extracted by
+CPANPLUS.
 
 =item B<< Unknown type 'CPANPLUS::Dist::WHATEVER' >>
 
@@ -981,7 +982,7 @@ recursively.
 
 =head1 DEPENDENCIES
 
-Requires the Slackware package management tools C<makepkg>, C<installpkg>,
+Requires the Slackware package management commands C<makepkg>, C<installpkg>,
 C<updatepkg>, and C<removepkg>.  Other required GNU/Linux commands are
 C<file>, C<gcc>, C<make>, and C<strip>.
 
