@@ -23,7 +23,7 @@ my $builder = $class->new(
         'Test::More' => 0,
     },
     requires => {
-        'perl' => 5.008008,
+        'perl' => 5.010,
         'CPANPLUS' => 0,
         'Cwd' => 0,
         'File::Find' => 0,

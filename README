@@ -20,7 +20,8 @@ To install this module, run the following commands:
 DEPENDENCIES
 
 The Slackware package management commands and the sudo command are required.
-The fakeroot command is recommended.
+The fakeroot command is highly recommended.  You can download a script that
+builds fakeroot from http://slackbuilds.org/.
 
 Perl 5.10 provides all required Perl modules.
 

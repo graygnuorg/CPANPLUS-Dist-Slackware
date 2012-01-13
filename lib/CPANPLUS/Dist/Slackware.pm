@@ -64,11 +64,12 @@ sub init {
     my $status = $dist->status;
 
     $status->mk_accessors(
-        qw(_pkgdesc _fakeroot_program _file_program _strip_program));
+        qw(_pkgdesc _fakeroot_cmd _file_cmd _run_perl_cmd _strip_cmd));
 
-    $status->_fakeroot_program( IPC::Cmd::can_run('fakeroot') );
-    $status->_file_program( IPC::Cmd::can_run('file') );
-    $status->_strip_program( IPC::Cmd::can_run('strip') );
+    $status->_fakeroot_cmd( IPC::Cmd::can_run('fakeroot') );
+    $status->_file_cmd( IPC::Cmd::can_run('file') );
+    $status->_run_perl_cmd( IPC::Cmd::can_run('cpanp-run-perl') );
+    $status->_strip_cmd( IPC::Cmd::can_run('strip') );
 
     return 1;
 }
@@ -87,6 +88,12 @@ sub prepare {
 
     umask oct '022';
 
+    # Warn the user that the package might be built with Perl libraries in
+    # non-standard directories.
+    if ( $ENV{PERL5LIB} ) {
+        msg( loc(q{Building packages with PERL5LIB set!}) );
+    }
+
     {
 
         # CPANPLUS::Dist:MM does not accept multiple options in
@@ -94,10 +101,17 @@ sub prepare {
         # environment variables.
         local $ENV{PERL_MM_OPT}   = $PERL_MM_OPT;
         local $ENV{PERL_MB_OPT}   = $PERL_MB_OPT;
-        local $ENV{MODULEBUILDRC} = '/dev/null';
+        local $ENV{MODULEBUILDRC} = 'NONE';
 
-        # Don't pick up local modules, e.g. in the user's home directory.
-        delete local $ENV{PERL5LIB};
+        # Unfortunately, the Module::Build version shipped with Slackware
+        # Linux 13.1 and below does not support PERL_MB_OPT.  To keep things
+        # simple, the "buildflags" option is set if an old Perl interpreter is
+        # installed.
+        if ( $PERL_VERSION lt v5.12.0 ) {
+            my %hash = @params;
+            $hash{buildflags} = $PERL_MB_OPT;
+            @params = %hash;
+        }
 
         # We are not allowed to write to XML/SAX/ParserDetails.ini.
         local $ENV{SKIP_SAX_INSTALL} = 1;
@@ -120,10 +134,7 @@ sub create {
         # create stage.
         delete local $ENV{PERL_MM_OPT};
         delete local $ENV{PERL_MB_OPT};
-        local $ENV{MODULEBUILDRC} = '/dev/null';
-
-        # Don't pick up local modules, e.g. in the user's home directory.
-        delete local $ENV{PERL5LIB};
+        local $ENV{MODULEBUILDRC} = 'NONE';
 
         $dist->SUPER::create(@params) or return;
 
@@ -181,11 +192,19 @@ sub _parse_params {
     return $param_ref;
 }
 
-sub _perl_wrapper {
-    return
-          'use strict; BEGIN { my $old = select STDERR; $|++;'
+sub _run_perl {
+    my $dist = shift;
+
+    my $status = $dist->status;
+
+    my $run_perl_cmd = $status->_run_perl_cmd;
+    return $run_perl_cmd if $run_perl_cmd;
+
+    my $perl_wrapper
+        = 'use strict; BEGIN { my $old = select STDERR; $|++;'
         . ' select $old; $|++; $0 = shift(@ARGV); my $rv = do($0);'
         . ' die $@ if $@; }';
+    return ( '-e', $perl_wrapper );
 }
 
 sub _fake_install {
@@ -214,8 +233,8 @@ sub _fake_install {
         $cmd = [ $make, 'install', "DESTDIR=$destdir" ];
     }
     elsif ( $installer_type eq 'CPANPLUS::Dist::Build' ) {
-        my $perl = $param_ref->{perl};
-        my @run_perl = ( '-e', $dist->_perl_wrapper );
+        my $perl     = $param_ref->{perl};
+        my @run_perl = $dist->_run_perl;
         $cmd = [ $perl, @run_perl, 'Build', 'install', "destdir=$destdir" ];
     }
     else {
@@ -243,7 +262,7 @@ sub _makepkg {
 
     my $cmd = [ '/sbin/makepkg', '-l', 'y', '-c', 'y', $pkgdesc->outputname ];
     if ( $EFFECTIVE_USER_ID > 0 ) {
-        my $fakeroot = $status->_fakeroot_program;
+        my $fakeroot = $status->_fakeroot_cmd;
         if ($fakeroot) {
             unshift @{$cmd}, $fakeroot;
         }
@@ -620,9 +639,9 @@ sub _filetype {
     my ( $dist, $filename ) = @_;
 
     my $status = $dist->status;
-    my $file_program = $status->_file_program || return;
+    my $file_cmd = $status->_file_cmd || return;
 
-    my $cmd = [ $file_program, '-b', $filename ];
+    my $cmd = [ $file_cmd, '-b', $filename ];
     my $filetype;
     $dist->_run_command( $cmd, { buffer => \$filetype } ) or return;
     if ($filetype) {
@@ -635,9 +654,9 @@ sub _strip {
     my ( $dist, @filenames ) = @_;
 
     my $status = $dist->status;
-    my $strip_program = $status->_strip_program || return 1;
+    my $strip_cmd = $status->_strip_cmd || return 1;
 
-    my $cmd = [ $strip_program, '--strip-unneeded', @filenames ];
+    my $cmd = [ $strip_cmd, '--strip-unneeded', @filenames ];
     return $dist->_run_command($cmd);
 }
 
@@ -893,6 +912,11 @@ or not configured.
 =item B<< You do not have '/sbin/makepkg'... >>
 
 The Slackware package management commands are not installed.
+
+=item B<< Building packages with PERL5LIB set! >>
+
+This warns you that the package might be built with Perl libraries in
+non-standard directories.
 
 =item B<< Could not chdir into DIR >>
 
