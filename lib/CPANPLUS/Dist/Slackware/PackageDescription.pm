@@ -9,7 +9,7 @@ use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -206,11 +206,11 @@ sub summary {
 }
 
 sub _webpage {
-    my $self    = shift;
-    my $module  = $self->module;
-    my $srcname = $module->module;
+    my $self   = shift;
+    my $module = $self->module;
+    my $name   = $module->package_name;
 
-    return "https://metacpan.org/module/$srcname";
+    return "https://metacpan.org/release/$name";
 }
 
 sub config_function {
@@ -407,7 +407,7 @@ Slackware compatible package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 0.01.
+version 0.02.
 
 =head1 SYNOPSIS
 

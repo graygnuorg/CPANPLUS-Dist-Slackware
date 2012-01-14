@@ -1,5 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+0.02  2012-01-14 14:16:00 CET
+
+- Link to https://metacpan.org/release instead of /module.
+- Mention cpan2tgz, which I wasn't aware of.
+
 0.01  2012-01-12 18:58:56 CET
 
 - First version, released on an unsuspecting world.

@@ -1,4 +1,4 @@
-CPANPLUS-Dist-Slackware version 0.01
+CPANPLUS-Dist-Slackware version 0.02
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.
@@ -19,9 +19,9 @@ To install this module, run the following commands:
 
 DEPENDENCIES
 
-The Slackware package management commands and the sudo command are required.
-The fakeroot command is highly recommended.  You can download a script that
-builds fakeroot from http://slackbuilds.org/.
+The Slackware Linux package management tools and the sudo command are
+required.  The fakeroot command is highly recommended.  You can download a
+script that builds fakeroot from http://slackbuilds.org/.
 
 Perl 5.10 provides all required Perl modules.
 

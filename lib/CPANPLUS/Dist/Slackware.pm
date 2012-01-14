@@ -20,7 +20,7 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $README_SLACKWARE = 'README.SLACKWARE';
 
@@ -747,7 +747,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.01.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.02.
 
 =head1 SYNOPSIS
 
@@ -825,8 +825,8 @@ by the system administrator.
 
 =item B<< CPANPLUS::Dist::Slackware->format_available >>
 
-Returns a boolean indicating whether or not Slackware's package management
-commands are available.
+Returns a boolean indicating whether or not the Slackware Linux package
+management tools are available.
 
     $is_available = CPANPLUS::Dist::Slackware->format_available();
 
@@ -905,7 +905,7 @@ or not configured.
 
 =item B<< You do not have '/sbin/makepkg'... >>
 
-The Slackware package management commands are not installed.
+The Slackware Linux package management tools are not installed.
 
 =item B<< Could not chdir into DIR >>
 
@@ -956,7 +956,7 @@ C<CPANPLUS::Dist::Build>.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-Similar to the build scripts provided by L<http://slackbuilds.org/>
+Similar to the build scripts provided by L<http://slackbuilds.org/>,
 C<CPANPLUS::Dist::Slackware> respects the following environment variables:
 
 =over 4
@@ -995,8 +995,8 @@ recursively.
 
 =head1 DEPENDENCIES
 
-Requires the Slackware package management commands C<makepkg>, C<installpkg>,
-C<updatepkg>, and C<removepkg>.  Other required GNU/Linux commands are
+Requires the Slackware Linux package management commands C<makepkg>,
+C<installpkg>, C<updatepkg>, and C<removepkg>.  Other required commands are
 C<file>, C<gcc>, C<make>, and C<strip>.
 
 In order to manage packages as a non-root user, which is highly recommended,
@@ -1010,8 +1010,8 @@ Perl 5.10.
 
 =head1 INCOMPATIBILITIES
 
-Packages created with C<CPANPLUS::Dist::Slackware> may conflict with
-packages from L<http://slackbuilds.org/>.
+Packages created with C<CPANPLUS::Dist::Slackware> may conflict with packages
+from L<http://slackbuilds.org/> and packages created with C<cpan2tgz>.
 
 =head1 SEE ALSO
 
