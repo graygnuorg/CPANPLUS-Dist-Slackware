@@ -1,6 +1,3 @@
-* Automatically remove the staging directory from /tmp/CPANPLUS after
-  a package was built successfully.
-
 * Make sure that system files like /bin/sh cannot be overwritten by malicious
   distributions.
 

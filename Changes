@@ -1,7 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.02  2012-01-14 14:16:00 CET
+0.02  2012-01-15 11:23:00 CET
 
+- Unless --keepsource is given, the staging directory is removed after a
+  package has been built successfully.
 - Link to https://metacpan.org/release instead of /module.
 - Mention cpan2tgz, which I wasn't aware of.
 

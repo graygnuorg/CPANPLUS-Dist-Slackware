@@ -176,10 +176,11 @@ sub _parse_params {
     {
         local $Params::Check::ALLOW_UNKNOWN = 1;
         my $tmpl = {
-            force   => { default => $conf->get_conf('force') },
-            verbose => { default => $conf->get_conf('verbose') },
-            make    => { default => $conf->get_program('make') },
-            perl    => { default => $EXECUTABLE_NAME },
+            force       => { default => $conf->get_conf('force') },
+            verbose     => { default => $conf->get_conf('verbose') },
+            keep_source => { default => 0 },
+            make        => { default => $conf->get_program('make') },
+            perl        => { default => $EXECUTABLE_NAME },
         };
         $param_ref = Params::Check::check( $tmpl, \%params ) or return;
     }
@@ -251,10 +252,12 @@ sub _makepkg {
     my $conf    = $cb->configure_object;
     my $pkgdesc = $status->_pkgdesc;
 
-    my $verbose = $param_ref->{verbose};
-    my $destdir = $pkgdesc->destdir;
+    my $verbose    = $param_ref->{verbose};
+    my $destdir    = $pkgdesc->destdir;
+    my $outputname = $pkgdesc->outputname;
 
-    my $cmd = [ '/sbin/makepkg', '-l', 'y', '-c', 'y', $pkgdesc->outputname ];
+    my $needs_chown = 0;
+    my $cmd = [ '/sbin/makepkg', '-l', 'y', '-c', 'y', $outputname ];
     if ( $EFFECTIVE_USER_ID > 0 ) {
         my $fakeroot = $status->_fakeroot_cmd;
         if ($fakeroot) {
@@ -264,9 +267,7 @@ sub _makepkg {
             my $sudo = $conf->get_program('sudo');
             if ($sudo) {
                 unshift @{$cmd}, $sudo;
-
-                my $chown = [ $sudo, '/bin/chown', '-R', '0:0', $destdir ];
-                $dist->_run_command($chown) or return;
+                $needs_chown = 1;
             }
             else {
                 error( loc($NONROOT_WARNING) );
@@ -275,10 +276,34 @@ sub _makepkg {
         }
     }
 
-    msg( loc( q{Creating package '%1'}, $pkgdesc->outputname ) );
+    msg( loc( q{Creating package '%1'}, $outputname ) );
 
-    return $dist->_run_command( $cmd,
-        { dir => $destdir, verbose => $verbose } );
+    my $orig_uid = $UID;
+    my $orig_gid = ( split /\s+/, $GID )[0];
+    if ($needs_chown) {
+        my @stat = $dist->_stat($destdir);
+        return if !@stat;
+        $orig_uid = $stat[4];
+        $orig_gid = $stat[5];
+
+        $dist->_chown_recursively( 0, 0, $destdir ) or return;
+    }
+
+    $dist->_run_command( $cmd, { dir => $destdir, verbose => $verbose } )
+        or return;
+
+    if ($needs_chown) {
+        $dist->_chown_recursively( $orig_uid, $orig_gid, $outputname,
+            $destdir )
+            or return;
+    }
+
+    if ( !$param_ref->{keep_source} ) {
+        msg( loc( q{Removing '%1'}, $destdir ) );
+        $cb->_rmdir( dir => $destdir );
+    }
+
+    return 1;
 }
 
 sub _installpkg {
@@ -290,12 +315,11 @@ sub _installpkg {
     my $conf    = $cb->configure_object;
     my $pkgdesc = $status->_pkgdesc;
 
-    my $verbose = $param_ref->{verbose};
+    my $verbose    = $param_ref->{verbose};
+    my $outputname = $pkgdesc->outputname;
 
-    my $cmd = [
-        '/sbin/upgradepkg', '--install-new',
-        '--reinstall',      $pkgdesc->outputname
-    ];
+    my $cmd
+        = [ '/sbin/upgradepkg', '--install-new', '--reinstall', $outputname ];
     if ( $EFFECTIVE_USER_ID > 0 ) {
         my $sudo = $conf->get_program('sudo');
         if ($sudo) {
@@ -307,7 +331,7 @@ sub _installpkg {
         }
     }
 
-    msg( loc( q{Installing package '%1'}, $pkgdesc->outputname ) );
+    msg( loc( q{Installing package '%1'}, $outputname ) );
 
     return $dist->_run_command( $cmd, { verbose => $verbose } );
 }
@@ -676,6 +700,16 @@ sub _gzip {
     return ( $fail ? 0 : 1 );
 }
 
+sub _stat {
+    my ( $dist, $filename ) = @_;
+
+    my @stat = stat $filename;
+    if ( !@stat ) {
+        error( loc( q{Could not stat '%1': %2}, $filename, $OS_ERROR ) );
+    }
+    return @stat;
+}
+
 sub _lstat {
     my ( $dist, $filename ) = @_;
 
@@ -697,6 +731,27 @@ sub _chmod {
         }
     }
     return ( $fail ? 0 : 1 );
+}
+
+sub _chown_recursively {
+    my ( $dist, $uid, $gid, @filenames ) = @_;
+
+    my $module = $dist->parent;
+    my $cb     = $module->parent;
+    my $conf   = $cb->configure_object;
+
+    my $cmd = [ '/bin/chown', '-R', "$uid:$gid", @filenames ];
+    if ( $EFFECTIVE_USER_ID > 0 ) {
+        my $sudo = $conf->get_program('sudo');
+        if ($sudo) {
+            unshift @{$cmd}, $sudo;
+        }
+        else {
+            error( loc($NONROOT_WARNING) );
+            return;
+        }
+    }
+    return $dist->_run_command($cmd);
 }
 
 sub _unlink {
@@ -845,9 +900,9 @@ Runs C<perl Makefile.PL> or C<perl Build.PL> and determines what prerequisites
 this distribution declared.
 
     $success = $dist->prepare(
-        perl           => '/path/to/perl',
-        force          => (1|0),
-        verbose        => (1|0)
+        perl    => '/path/to/perl',
+        force   => (1|0),
+        verbose => (1|0)
     );
 
 If you set C<force> to true, it will go over all the stages of the C<prepare>
@@ -865,11 +920,12 @@ a Slackware compatible package.  Also scans for and attempts to satisfy any
 prerequisites the module may have.
 
     $success = $dist->create(
-        perl       => '/path/to/perl',
-        make       => '/path/to/make',
-        skiptest   => (1|0),
-        force      => (1|0),
-        verbose    => (1|0)
+        perl        => '/path/to/perl',
+        make        => '/path/to/make',
+        skiptest    => (1|0),
+        force       => (1|0),
+        verbose     => (1|0)
+        keep_source => (1|0)
     );
 
 If you set C<skiptest> to true, the test stage will be skipped.  If you set
