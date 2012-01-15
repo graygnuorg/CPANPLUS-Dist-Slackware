@@ -337,7 +337,7 @@ sub _prereqs {
     my @prereqs;
     my $prereq_ref = $module->status->prereqs;
     if ($prereq_ref) {
-        for my $srcname ( sort { lc $a cmp lc $b } keys %{$prereq_ref} ) {
+        for my $srcname ( sort { uc $a cmp uc $b } keys %{$prereq_ref} ) {
             my $modobj = $cb->module_tree($srcname);
             next if !$modobj;
             next if $modobj->package_is_perl_core;

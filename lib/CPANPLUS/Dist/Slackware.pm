@@ -533,6 +533,8 @@ sub _write_config_files_to_doinst_sh {
     return 0 if $fail;
     return 1 if !@conffiles;
 
+    @conffiles = sort { uc $a cmp uc $b } @conffiles;
+
     # List the configuration files in README.SLACKWARE.
     $dist->_write_config_files_to_readme_slackware(@conffiles) or return;
 
