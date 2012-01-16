@@ -442,7 +442,7 @@ F<Changes>.
 
 Returns a newly constructed object.
 
-    $pkdesc = CPANPLUS::Dist::Slackware::PackageDescription->new(
+    $pkgdesc = CPANPLUS::Dist::Slackware::PackageDescription->new(
         module => $modobj,
         %attrs
     );
