@@ -426,18 +426,74 @@ sub _install_docfiles {
     return ( $fail ? 0 : 1 );
 }
 
+sub _verify_filename {
+    my ( $dist, $filename ) = @_;
+
+    my $module  = $dist->parent;
+    my $srcname = $module->module;
+
+    my $general_whitelist = qr{ /(?:etc|usr|var)/ }xms;
+
+    my $standard_whitelist = qr{
+        ^(?:
+            /etc/
+            | /usr/$
+            | /usr/(?:bin|doc|man)/
+            | /usr/(?:lib(?:64)?|share)/(?:perl5/|$)
+        )
+    }xms;
+
+    my $command = qr{ /usr/bin/. }xms;
+
+    $filename = substr $filename, 1;    # Remove leading '.'.
+    if ( $filename !~ $general_whitelist ) {
+        error(
+            loc(q{Blacklisted file found in '%1': '%2'}, $srcname,
+                $filename
+            )
+        );
+        return 0;
+    }
+    elsif ( $filename =~ $command ) {
+        msg( loc( q{'%1' provides command: '%2'}, $srcname, $filename ) );
+    }
+    elsif ( $filename !~ $standard_whitelist ) {
+        msg( loc( q{'%1' provides extra file: '%2'}, $srcname, $filename ) );
+    }
+    return 1;
+}
+
 sub _process_installed_files {
     my ( $dist, $param_ref ) = @_;
 
     my $status  = $dist->status;
+    my $module  = $dist->parent;
+    my $cb      = $module->parent;
     my $pkgdesc = $status->_pkgdesc;
+
+    my $destdir = $pkgdesc->destdir;
+
+    my $orig_dir = Cwd::cwd();
+    if ( !$cb->_chdir( dir => $destdir ) ) {
+        return;
+    }
 
     my $fail   = 0;
     my $wanted = sub {
         my $filename = $_;
 
+        return if $filename eq q{.};
+
         my @stat = $dist->_lstat($filename);
         return if !@stat;
+
+        my $pathname = $File::Find::name;
+        if ( -d _ ) {
+            $pathname .= q{/};
+        }
+        if ( !$dist->_verify_filename($pathname) ) {
+            ++$fail;
+        }
 
         # Skip symbolic links.
         return if -l _;
@@ -464,17 +520,19 @@ sub _process_installed_files {
             }
             else {
                 my $type = $dist->_filetype($filename);
-                if ($type) {
-                    if ( $type =~ /ELF.+(?:executable|shared object)/s ) {
-                        if ( !$dist->_strip($filename) ) {
-                            ++$fail;
-                        }
+                if ( $type =~ /ELF.+(?:executable|shared object)/s ) {
+                    if ( !$dist->_strip($filename) ) {
+                        ++$fail;
                     }
                 }
             }
         }
     };
-    File::Find::finddepth( $wanted, $pkgdesc->destdir );
+    File::Find::finddepth( $wanted, q{.} );
+
+    if ( !$cb->_chdir( dir => $orig_dir ) ) {
+        ++$fail;
+    }
 
     return ( $fail ? 0 : 1 );
 }
@@ -659,13 +717,20 @@ sub _filetype {
     my ( $dist, $filename ) = @_;
 
     my $status = $dist->status;
-    my $file_cmd = $status->_file_cmd || return;
 
-    my $cmd = [ $file_cmd, '-b', $filename ];
     my $filetype;
-    $dist->_run_command( $cmd, { buffer => \$filetype } ) or return;
+    my $file_cmd = $status->_file_cmd;
+    if ($file_cmd) {
+        my $cmd = [ $file_cmd, '-b', $filename ];
+        if ( !$dist->_run_command( $cmd, { buffer => \$filetype } ) ) {
+            undef $filetype;
+        }
+    }
     if ($filetype) {
         chomp $filetype;
+    }
+    else {
+        $filetype = 'data';
     }
     return $filetype;
 }
@@ -1053,7 +1118,7 @@ recursively.
 
 =head1 DEPENDENCIES
 
-Requires the Slackware Linux package management commands C<makepkg>,
+Requires the Slackware Linux package management tools C<makepkg>,
 C<installpkg>, C<updatepkg>, and C<removepkg>.  Other required commands are
 C<file>, C<gcc>, C<make>, and C<strip>.
 

@@ -1,6 +1,3 @@
-* Make sure that system files like /bin/sh cannot be overwritten by malicious
-  distributions.
-
 * List the shared libraries that are used by XS modules in
   README.SLACKWARE.
 
