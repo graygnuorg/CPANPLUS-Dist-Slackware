@@ -432,7 +432,7 @@ sub _verify_filename {
     my $module  = $dist->parent;
     my $srcname = $module->module;
 
-    my $general_whitelist = qr{ /(?:etc|usr|var)/ }xms;
+    my $general_whitelist = qr{ /(?:etc|usr|var|opt)/ }xms;
 
     my $standard_whitelist = qr{
         ^(?:
@@ -1032,8 +1032,8 @@ The Slackware Linux package management tools are not installed.
 
 =item B<< Blacklisted file found... >>
 
-Distributions are not allowed to install files outside of F</etc>, F</usr> and
-F</var>.
+Distributions are not allowed to install files outside of F</etc>, F</usr>,
+F</var> and F</opt>.
 
 =item B<< Could not chdir into DIR >>
 
