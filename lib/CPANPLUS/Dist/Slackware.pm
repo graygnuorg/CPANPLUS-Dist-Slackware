@@ -1030,6 +1030,11 @@ or not configured.
 
 The Slackware Linux package management tools are not installed.
 
+=item B<< Blacklisted file found... >>
+
+Distributions are not allowed to install files outside of F</etc>, F</usr> and
+F</var>.
+
 =item B<< Could not chdir into DIR >>
 
 C<CPANPLUS::Dist::Slackware> could not change its current directory while
