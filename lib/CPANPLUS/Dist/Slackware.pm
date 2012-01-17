@@ -455,10 +455,10 @@ sub _verify_filename {
         return 0;
     }
     elsif ( $filename =~ $command ) {
-        msg( loc( q{'%1' provides command: '%2'}, $srcname, $filename ) );
+        msg( loc( q{'%1' provides command '%2'}, $srcname, $filename ) );
     }
     elsif ( $filename !~ $standard_whitelist ) {
-        msg( loc( q{'%1' provides extra file: '%2'}, $srcname, $filename ) );
+        msg( loc( q{'%1' provides extra file '%2'}, $srcname, $filename ) );
     }
     return 1;
 }
