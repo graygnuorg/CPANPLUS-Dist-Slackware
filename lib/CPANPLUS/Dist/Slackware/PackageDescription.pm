@@ -362,7 +362,7 @@ sub readme_slackware {
     my $readme = "$title\n$line\n\n";
 
     my $text = 'This package was created by CPANPLUS::Dist::Slackware'
-        . " from the Perl distribution $srcname version $version.\n";
+        . " from the Perl distribution '$srcname' version $version.\n";
     $readme .= Text::Wrap::wrap( q{}, q{}, $text );
 
     my @prereqs = $self->_prereqs;
