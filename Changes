@@ -1,8 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.02  2012-01-15 11:23:00 CET
+0.02  2012-01-18 11:13:00 CET
 
-- Warn if a file is installed in /usr/bin or a non-standard directory.
+- Warn if files are installed in non-standard directories.
 - Unless --keepsource is given, the staging directory is removed after a
   package has been built successfully.
 - Link to https://metacpan.org/release instead of /module.
