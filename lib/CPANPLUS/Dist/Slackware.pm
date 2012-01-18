@@ -325,9 +325,13 @@ sub _makepkg {
     }
 
     if ( !$param_ref->{keep_source} ) {
-        msg( loc( q{Removing '%1'}, $destdir ) );
-        if ( !$cb->_rmdir( dir => $destdir ) ) {
-            ++$fail;
+
+        # Keep the staging directory if something failed.
+        if ( !$fail ) {
+            msg( loc( q{Removing '%1'}, $destdir ) );
+            if ( !$cb->_rmdir( dir => $destdir ) ) {
+                ++$fail;
+            }
         }
     }
 
