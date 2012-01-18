@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+0.03  2012-01-18 13:40:07 CET
+
+- Create the staging directory before the distribution is installed.
+
 0.02  2012-01-18 11:13:00 CET
 
 - Warn if files are installed in non-standard directories.
