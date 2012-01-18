@@ -28,6 +28,7 @@ my $builder = $class->new(
         'Cwd' => 0,
         'File::Find' => 0,
         'File::Spec' => 0,
+        'File::Temp' => 0,
         'IO::Compress::Gzip' => 0,
         'IPC::Cmd' => 0,
         'Locale::Maketext::Simple' => 0,

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use File::Spec qw();
+use File::Temp qw();
 use Pod::Find qw();
 use Pod::Simple::PullParser qw();
 use POSIX qw();
@@ -388,10 +389,11 @@ sub destdir {
     my $self    = shift;
     my $destdir = $self->{destdir};
     if ( !$destdir ) {
-        my $wrkdir = $ENV{TMP}
+        my $template = 'package-' . $self->name . '-XXXXXXXXXX';
+        my $wrkdir   = $ENV{TMP}
             || File::Spec->catdir( File::Spec->tmpdir, 'CPANPLUS' );
-        $destdir
-            = File::Spec->catdir( $wrkdir, 'package-' . $self->distname );
+        $destdir = File::Temp::tempdir( $template, DIR => $wrkdir );
+        $self->{destdir} = $destdir;
     }
     return $destdir;
 }
@@ -557,7 +559,7 @@ configuration files provided by the package.
 =item B<< $pkgdesc->destdir >>
 
 Returns the staging directory where the distribution is temporarily installed,
-e.g. F</tmp/CPANPLUS/package-perl-Some-Module-0.01>.  Defaults to a
+e.g. F</tmp/CPANPLUS/package-perl-Some-Module-01yEr7X43K>.  Defaults to a
 package-specific subdirectory in F<$TMP> or F</tmp/CPANPLUS>.
 
 =back
@@ -573,9 +575,9 @@ variables.
 
 =head1 DEPENDENCIES
 
-Requires the modules C<File::Spec>, C<Pod::Find>, C<Pod::Simple>, C<POSIX>,
-and C<Text::Wrap>, which are all provided by Perl 5.10.  If available, the
-module C<Parse::CPAN::Meta> is used.
+Requires the modules C<File::Spec>, C<File::Temp>, C<Pod::Find>,
+C<Pod::Simple>, C<POSIX>, and C<Text::Wrap>, which are all provided by Perl
+5.10.  If available, the module C<Parse::CPAN::Meta> is used.
 
 =head1 INCOMPATIBILITIES
 

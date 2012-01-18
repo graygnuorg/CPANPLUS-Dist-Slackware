@@ -245,7 +245,7 @@ sub _fake_install {
         return;
     }
 
-    msg( loc( q{Staging '%1' in '%2'}, $srcname, $pkgdesc->destdir ) );
+    msg( loc( q{Staging '%1' in '%2'}, $srcname, $destdir ) );
 
     return $dist->_run_command( $cmd,
         { dir => $wrksrc, verbose => $verbose } );
