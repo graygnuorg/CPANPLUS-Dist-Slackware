@@ -3,6 +3,8 @@ package CPANPLUS::Dist::Slackware::PackageDescription;
 use strict;
 use warnings;
 
+use English qw( -no_match_vars );
+
 use File::Spec qw();
 use File::Temp qw();
 use Pod::Find qw();
@@ -10,7 +12,7 @@ use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -386,12 +388,19 @@ sub readme_slackware {
 }
 
 sub destdir {
-    my $self    = shift;
+    my $self = shift;
+
+    my $module  = $self->module;
+    my $cb      = $module->parent;
     my $destdir = $self->{destdir};
     if ( !$destdir ) {
         my $template = 'package-' . $self->name . '-XXXXXXXXXX';
         my $wrkdir   = $ENV{TMP}
             || File::Spec->catdir( File::Spec->tmpdir, 'CPANPLUS' );
+        if ( !-d $wrkdir ) {
+            $cb->_mkdir( dir => $wrkdir )
+                or die "Could not create directory '$wrkdir': $OS_ERROR\n";
+        }
         $destdir = File::Temp::tempdir( $template, DIR => $wrkdir );
         $self->{destdir} = $destdir;
     }
@@ -409,7 +418,7 @@ Slackware compatible package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 0.02.
+version 0.03.
 
 =head1 SYNOPSIS
 

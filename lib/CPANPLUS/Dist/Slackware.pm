@@ -215,7 +215,6 @@ sub _fake_install {
 
     my $status  = $dist->status;
     my $module  = $dist->parent;
-    my $cb      = $module->parent;
     my $pkgdesc = $status->_pkgdesc;
     my $srcname = $module->module;
 
@@ -244,8 +243,6 @@ sub _fake_install {
         error( loc( q{Unknown type '%1'}, $installer_type ) );
         return;
     }
-
-    $cb->_mkdir( dir => $destdir ) or return;
 
     msg( loc( q{Staging '%1' in '%2'}, $srcname, $destdir ) );
 
