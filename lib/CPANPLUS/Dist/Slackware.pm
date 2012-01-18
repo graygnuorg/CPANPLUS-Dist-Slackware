@@ -24,18 +24,6 @@ our $VERSION = '0.02';
 
 my $README_SLACKWARE = 'README.SLACKWARE';
 
-my $PERL_MM_OPT = << 'END_PERL_MM_OPT';
-INSTALLDIRS=vendor
-INSTALLVENDORMAN1DIR=/usr/man/man1
-INSTALLVENDORMAN3DIR=/usr/man/man3
-END_PERL_MM_OPT
-
-my $PERL_MB_OPT = << 'END_PERL_MB_OPT';
---installdirs vendor
---config installvendorman1dir=/usr/man/man1
---config installvendorman3dir=/usr/man/man3
-END_PERL_MB_OPT
-
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
 you must have sudo and, optionally, fakeroot.
@@ -93,8 +81,8 @@ sub prepare {
         # CPANPLUS::Dist:MM does not accept multiple options in
         # makemakerflags.  Thus all options have to be passed via
         # environment variables.
-        local $ENV{PERL_MM_OPT}   = $PERL_MM_OPT;
-        local $ENV{PERL_MB_OPT}   = $PERL_MB_OPT;
+        local $ENV{PERL_MM_OPT}   = $dist->_perl_mm_opt;
+        local $ENV{PERL_MB_OPT}   = $dist->_perl_mb_opt;
         local $ENV{MODULEBUILDRC} = 'NONE';
 
         # Unfortunately, the Module::Build version shipped with Slackware
@@ -103,7 +91,7 @@ sub prepare {
         # installed.
         if ( $PERL_VERSION lt v5.12.0 ) {
             my %hash = @params;
-            $hash{buildflags} = $PERL_MB_OPT;
+            $hash{buildflags} = $ENV{PERL_MB_OPT};
             @params = %hash;
         }
 
@@ -145,7 +133,7 @@ sub create {
 
     $dist->_make_installdir($param_ref) or return;
 
-    $dist->_write_config_files_to_doinst_sh($param_ref) or return;
+    $dist->_write_config_files($param_ref) or return;
 
     $dist->_write_slack_desc($param_ref) or return;
 
@@ -185,6 +173,26 @@ sub _parse_params {
         $param_ref = Params::Check::check( $tmpl, \%params ) or return;
     }
     return $param_ref;
+}
+
+sub _perl_mm_opt {
+    my $dist = shift;
+
+    return << 'END_PERL_MM_OPT';
+INSTALLDIRS=vendor
+INSTALLVENDORMAN1DIR=/usr/man/man1
+INSTALLVENDORMAN3DIR=/usr/man/man3
+END_PERL_MM_OPT
+}
+
+sub _perl_mb_opt {
+    my $dist = shift;
+
+    return << 'END_PERL_MB_OPT';
+--installdirs vendor
+--config installvendorman1dir=/usr/man/man1
+--config installvendorman3dir=/usr/man/man3
+END_PERL_MB_OPT
 }
 
 sub _run_perl {
@@ -289,21 +297,41 @@ sub _makepkg {
         $dist->_chown_recursively( 0, 0, $destdir ) or return;
     }
 
-    $dist->_run_command( $cmd, { dir => $destdir, verbose => $verbose } )
-        or return;
+    my $fail = 0;
+    if (!$dist->_run_command(
+            $cmd, { dir => $destdir, verbose => $verbose }
+        )
+        )
+    {
+        ++$fail;
+    }
 
     if ($needs_chown) {
-        $dist->_chown_recursively( $orig_uid, $orig_gid, $outputname,
-            $destdir )
-            or return;
+        if ( -d $destdir ) {
+            if (!$dist->_chown_recursively( $orig_uid, $orig_gid, $destdir ) )
+            {
+                ++$fail;
+            }
+        }
+        if ( -f $outputname ) {
+            if (!$dist->_chown_recursively(
+                    $orig_uid, $orig_gid, $outputname
+                )
+                )
+            {
+                ++$fail;
+            }
+        }
     }
 
     if ( !$param_ref->{keep_source} ) {
         msg( loc( q{Removing '%1'}, $destdir ) );
-        $cb->_rmdir( dir => $destdir );
+        if ( !$cb->_rmdir( dir => $destdir ) ) {
+            ++$fail;
+        }
     }
 
-    return 1;
+    return ( $fail ? 0 : 1 );
 }
 
 sub _installpkg {
@@ -402,17 +430,13 @@ sub _install_docfiles {
     # Create README.SLACKWARE.
     my $readme = $pkgdesc->readme_slackware;
     my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
-    $dist->_with_output_to_file( $readmefile, '>',
-        sub { print $readme or die "Write error\n" } )
-        or return;
+    $dist->_write_to_file( '>', $readmefile, $readme ) or return;
 
     # Create perl-Some-Module.SlackBuild.
     my $script = $pkgdesc->build_script;
     my $scriptfile
         = File::Spec->catfile( $docdir, $pkgdesc->name . '.SlackBuild' );
-    $dist->_with_output_to_file( $scriptfile, '>',
-        sub { print $script or die "Write error\n" } )
-        or return;
+    $dist->_write_to_file( '>', $scriptfile, $script ) or return;
 
     # Copy docfiles like README and Changes.
     my $fail = 0;
@@ -452,7 +476,7 @@ sub _verify_filename {
                 $filename
             )
         );
-        return 0;
+        return;
     }
     elsif ( $filename =~ $command ) {
         msg( loc( q{'%1' provides command '%2'}, $srcname, $filename ) );
@@ -487,6 +511,8 @@ sub _process_installed_files {
         my @stat = $dist->_lstat($filename);
         return if !@stat;
 
+        # Check whether the distribution tries to install files in
+        # non-standard directories.
         my $pathname = $File::Find::name;
         if ( -d _ ) {
             $pathname .= q{/};
@@ -549,7 +575,7 @@ sub _make_installdir {
     return $cb->_mkdir( dir => $installdir );
 }
 
-sub _write_config_files_to_doinst_sh {
+sub _write_config_files {
     my ( $dist, $param_ref ) = @_;
 
     my $status  = $dist->status;
@@ -588,7 +614,7 @@ sub _write_config_files_to_doinst_sh {
         ++$fail;
     }
 
-    return 0 if $fail;
+    return   if $fail;
     return 1 if !@conffiles;
 
     @conffiles = sort { uc $a cmp uc $b } @conffiles;
@@ -605,8 +631,7 @@ sub _write_config_files_to_doinst_sh {
 
     my $installdir = File::Spec->catdir( $pkgdesc->destdir, 'install' );
     my $doinstfile = File::Spec->catfile( $installdir, 'doinst.sh' );
-    return $dist->_with_output_to_file( $doinstfile, '>',
-        sub { print $script or die "Write error\n" } );
+    return $dist->_write_to_file( '>', $doinstfile, $script );
 }
 
 sub _write_config_files_to_readme_slackware {
@@ -622,8 +647,7 @@ sub _write_config_files_to_readme_slackware {
 
     my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
     my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
-    return $dist->_with_output_to_file( $readmefile, '>>',
-        sub { print $readme or die "Write error\n" } );
+    return $dist->_write_to_file( '>>', $readmefile, $readme );
 }
 
 sub _write_slack_desc {
@@ -637,12 +661,11 @@ sub _write_slack_desc {
     my $installdir = File::Spec->catdir( $pkgdesc->destdir, 'install' );
     my $descfile = File::Spec->catfile( $installdir, 'slack-desc' );
     my $desc = $pkgdesc->slack_desc;
-    return $dist->_with_output_to_file( $descfile, '>',
-        sub { print $desc or die "Write error\n" } );
+    return $dist->_write_to_file( '>', $descfile, $desc );
 }
 
-sub _with_output_to_file {
-    my ( $dist, $filename, $mode, $coderef ) = @_;
+sub _write_to_file {
+    my ( $dist, $mode, $filename, $text ) = @_;
 
     my $fh;
     if ( !open $fh, $mode, $filename ) {
@@ -651,12 +674,11 @@ sub _with_output_to_file {
         return;
     }
 
-    my $fail = not eval {
-        local *STDOUT = $fh;
-        &{$coderef};
-    };
-    if ($fail) {
-        error( loc( q{Could not write to file '%1'}, $filename ) );
+    my $fail = 0;
+    if ( !print {$fh} $text ) {
+        error(
+            loc( q{Could not write to file '%1': %2}, $filename, $OS_ERROR )
+        );
         ++$fail;
     }
 

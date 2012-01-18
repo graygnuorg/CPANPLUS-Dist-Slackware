@@ -1,3 +1,6 @@
+# Don't require RCS keywords.
+[-Miscellanea::RequireRcsKeywords]
+
 # Don't require close() invocations to be within 9 lines of the open() call.
 # Unfortunately, the "lines" setting is ignored by Perl::Critic 1.117 so this
 # policy has to be disabled completely.
