@@ -363,7 +363,7 @@ sub readme_slackware {
     $columns = 78;
 
     my $title  = "$srcname for Slackware Linux";
-    my $line   = q{*} x length $title;
+    my $line   = q{=} x length $title;
     my $readme = "$title\n$line\n\n";
 
     my @prereqs = $self->_prereqs;
