@@ -13,7 +13,7 @@ use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -378,8 +378,9 @@ sub readme_slackware {
     if (@prereqs) {
         $readme .= "\n";
         for my $prereq (@prereqs) {
-            $readme .= $prereq->{srcname};
+            my $prereq_srcname = $prereq->{srcname};
             my $prereq_version = $prereq->{version};
+            $readme .= "* $prereq_srcname";
             if ( $prereq_version ne '0' ) {
                 $readme .= " >= $prereq_version";
             }
