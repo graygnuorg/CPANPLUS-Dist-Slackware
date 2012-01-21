@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+0.04  2012-01-21 20:56:37 CET
+
+- Check if a module is provided by Perl itself.
+
 0.03  2012-01-18 14:51:26 CET
 
 - Make sure that the staging directory's parent directory exists.

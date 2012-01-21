@@ -7,6 +7,7 @@ use English qw( -no_match_vars );
 
 use File::Spec qw();
 use File::Temp qw();
+use Module::CoreList qw();
 use Pod::Find qw();
 use Pod::Simple::PullParser qw();
 use POSIX qw();
@@ -344,9 +345,10 @@ sub _prereqs {
             my $modobj = $cb->module_tree($srcname);
             next if !$modobj;
             next if $modobj->package_is_perl_core;
+            my $version = $prereq_ref->{$srcname};
+            next if Module::CoreList->first_release( $srcname, $version );
 
-            push @prereqs,
-                { srcname => $srcname, version => $prereq_ref->{$srcname} };
+            push @prereqs, { srcname => $srcname, version => $version };
         }
     }
     return @prereqs;
@@ -364,16 +366,17 @@ sub readme_slackware {
     my $line   = q{*} x length $title;
     my $readme = "$title\n$line\n\n";
 
-    my $text = 'This package was created by CPANPLUS::Dist::Slackware'
-        . " from the Perl distribution '$srcname' version $version.\n";
-    $readme .= Text::Wrap::wrap( q{}, q{}, $text );
-
     my @prereqs = $self->_prereqs;
+
+    my $text = 'This package was created by CPANPLUS::Dist::Slackware'
+        . " from the Perl distribution '$srcname' version $version.";
     if (@prereqs) {
-        $readme
-            .= "\n"
-            . "Building this package required the following Perl modules:\n"
-            . "\n";
+        $text .= "  It requires the following Perl modules:";
+    }
+    $readme .= Text::Wrap::wrap( q{}, q{}, $text ) . "\n";
+
+    if (@prereqs) {
+        $readme .= "\n";
         for my $prereq (@prereqs) {
             $readme .= $prereq->{srcname};
             my $prereq_version = $prereq->{version};
@@ -418,7 +421,7 @@ Slackware compatible package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 0.03.
+version 0.04.
 
 =head1 SYNOPSIS
 
