@@ -32,6 +32,7 @@ my $builder = $class->new(
         'IO::Compress::Gzip' => 0,
         'IPC::Cmd' => 0,
         'Locale::Maketext::Simple' => 0,
+        'Module::CoreList' => 0,
         'Params::Check' => 0,
         'Pod::Find' => 0,
         'Pod::Simple' => 0,
