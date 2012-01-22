@@ -371,7 +371,7 @@ sub readme_slackware {
     my $text = 'This package was created by CPANPLUS::Dist::Slackware'
         . " from the Perl distribution '$srcname' version $version.";
     if (@prereqs) {
-        $text .= "  It requires the following Perl modules:";
+        $text .= '  It requires the following Perl modules:';
     }
     $readme .= Text::Wrap::wrap( q{}, q{}, $text ) . "\n";
 
