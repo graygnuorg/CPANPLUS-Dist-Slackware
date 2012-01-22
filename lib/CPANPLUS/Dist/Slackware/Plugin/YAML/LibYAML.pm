@@ -48,7 +48,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Fix YAML::LibYAML build
+CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Fix F<LibYAML/Makefile.PL>
 
 =head1 VERSION
 
@@ -58,7 +58,7 @@ C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.01.
 =head1 SYNOPSIS
 
     $is_available = $plugin->available($dist);
-    $success      = $plugin->pre_prepare($dist);
+    $success = $plugin->pre_prepare($dist);
 
 =head1 DESCRIPTION
 
