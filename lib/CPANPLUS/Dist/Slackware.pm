@@ -16,11 +16,12 @@ use File::Spec qw();
 use IO::Compress::Gzip qw($GzipError);
 use IPC::Cmd qw();
 use Locale::Maketext::Simple ( Style => 'gettext' );
+use Module::Pluggable require => 1;
 use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my $README_SLACKWARE = 'README.SLACKWARE';
 
@@ -52,12 +53,15 @@ sub init {
     my $status = $dist->status;
 
     $status->mk_accessors(
-        qw(_pkgdesc _fakeroot_cmd _file_cmd _run_perl_cmd _strip_cmd));
+        qw(_pkgdesc _fakeroot_cmd _file_cmd _run_perl_cmd _strip_cmd _plugins)
+    );
 
     $status->_fakeroot_cmd( IPC::Cmd::can_run('fakeroot') );
     $status->_file_cmd( IPC::Cmd::can_run('file') );
     $status->_run_perl_cmd( IPC::Cmd::can_run('cpanp-run-perl') );
     $status->_strip_cmd( IPC::Cmd::can_run('strip') );
+
+    $status->_plugins( [ grep { $_->available($dist) } $dist->plugins ] );
 
     return 1;
 }
@@ -98,6 +102,8 @@ sub prepare {
         # We are not allowed to write to XML/SAX/ParserDetails.ini.
         local $ENV{SKIP_SAX_INSTALL} = 1;
 
+        $dist->_call_plugins('pre_prepare') or return;
+
         $dist->SUPER::prepare(@params) or return;
     }
 
@@ -137,6 +143,8 @@ sub create {
 
     $dist->_write_slack_desc($param_ref) or return;
 
+    $dist->_call_plugins('pre_package') or return;
+
     $dist->_makepkg($param_ref) or return;
 
     return $status->created(1);
@@ -173,6 +181,19 @@ sub _parse_params {
         $param_ref = Params::Check::check( $tmpl, \%params ) or return;
     }
     return $param_ref;
+}
+
+sub _call_plugins {
+    my ( $dist, $method ) = @_;
+
+    my $status = $dist->status;
+
+    for my $plugin ( @{ $status->_plugins } ) {
+        if ( $plugin->can($method) ) {
+            $plugin->$method($dist) or return;
+        }
+    }
+    return 1;
 }
 
 sub _perl_mm_opt {
@@ -433,13 +454,13 @@ sub _install_docfiles {
     # Create README.SLACKWARE.
     my $readme = $pkgdesc->readme_slackware;
     my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
-    $dist->_write_to_file( '>', $readmefile, $readme ) or return;
+    $dist->_write_file( $readmefile, $readme ) or return;
 
     # Create perl-Some-Module.SlackBuild.
     my $script = $pkgdesc->build_script;
     my $scriptfile
         = File::Spec->catfile( $docdir, $pkgdesc->name . '.SlackBuild' );
-    $dist->_write_to_file( '>', $scriptfile, $script ) or return;
+    $dist->_write_file( $scriptfile, $script ) or return;
 
     # Copy docfiles like README and Changes.
     my $fail = 0;
@@ -623,7 +644,7 @@ sub _write_config_files {
     @conffiles = sort { uc $a cmp uc $b } @conffiles;
 
     # List the configuration files in README.SLACKWARE.
-    $dist->_write_config_files_to_readme_slackware(@conffiles) or return;
+    $dist->_append_config_files_to_readme_slackware(@conffiles) or return;
 
     # Add a config function to doinst.sh.
     my $script = $pkgdesc->config_function;
@@ -634,10 +655,10 @@ sub _write_config_files {
 
     my $installdir = File::Spec->catdir( $pkgdesc->destdir, 'install' );
     my $doinstfile = File::Spec->catfile( $installdir, 'doinst.sh' );
-    return $dist->_write_to_file( '>', $doinstfile, $script );
+    return $dist->_write_file( $doinstfile, $script );
 }
 
-sub _write_config_files_to_readme_slackware {
+sub _append_config_files_to_readme_slackware {
     my ( $dist, @conffiles ) = @_;
 
     my $status  = $dist->status;
@@ -646,11 +667,11 @@ sub _write_config_files_to_readme_slackware {
     my $readme
         = "\n"
         . "This package provides the following configuration files:\n" . "\n"
-        . join "\n", map {"/$_"} @conffiles;
+        . join( "\n", map {"* /$_"} @conffiles ) . "\n";
 
     my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
     my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
-    return $dist->_write_to_file( '>>', $readmefile, $readme );
+    return $dist->_write_file( $readmefile, { append => 1 }, $readme );
 }
 
 sub _write_slack_desc {
@@ -664,11 +685,34 @@ sub _write_slack_desc {
     my $installdir = File::Spec->catdir( $pkgdesc->destdir, 'install' );
     my $descfile = File::Spec->catfile( $installdir, 'slack-desc' );
     my $desc = $pkgdesc->slack_desc;
-    return $dist->_write_to_file( '>', $descfile, $desc );
+    return $dist->_write_file( $descfile, $desc );
 }
 
-sub _write_to_file {
-    my ( $dist, $mode, $filename, $text ) = @_;
+sub _read_file {
+    my ( $dist, $filename ) = @_;
+
+    my $fh;
+    if ( !open $fh, '<', $filename ) {
+        error( loc( q{Could not open file '%1': %2}, $filename, $OS_ERROR ) );
+        return;
+    }
+
+    my $text = do { local $RS = undef; <$fh> };
+
+    if ( !close $fh ) {
+        error(
+            loc( q{Could not close file '%1': %2}, $filename, $OS_ERROR ) );
+        return;
+    }
+
+    return $text;
+}
+
+sub _write_file {
+    my ( $dist, $filename, @lines ) = @_;
+
+    my $param_ref = ( ref $lines[0] eq 'HASH' ) ? shift @lines : {};
+    my $mode = ( $param_ref->{append} ) ? '>>' : '>';
 
     my $fh;
     if ( !open $fh, $mode, $filename ) {
@@ -678,7 +722,7 @@ sub _write_to_file {
     }
 
     my $fail = 0;
-    if ( !print {$fh} $text ) {
+    if ( !print {$fh} @lines ) {
         error(
             loc( q{Could not write to file '%1': %2}, $filename, $OS_ERROR )
         );
@@ -764,7 +808,9 @@ sub _strip {
     my ( $dist, @filenames ) = @_;
 
     my $status = $dist->status;
-    my $strip_cmd = $status->_strip_cmd || return 1;
+
+    my $strip_cmd = $status->_strip_cmd;
+    return 1 if !$strip_cmd;
 
     my $cmd = [ $strip_cmd, '--strip-unneeded', @filenames ];
     return $dist->_run_command($cmd);
@@ -894,7 +940,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.03.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.04.
 
 =head1 SYNOPSIS
 

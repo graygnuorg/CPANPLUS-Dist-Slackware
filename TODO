@@ -5,8 +5,5 @@
   Class::C3::Componentised, Debug::ShowStuff WWW::Mechanize::TreeBuilder and
   possibly other modules.
 
-* It seems that Alien::wxWidgets needs to be removed from the system before
-  the package can be re-built.  Needs more investigation.
-
 * The Clipboard distribution depends on xclip, which is available at
   slackbuilds.org.  The module's test suite fails if xclip is not installed.
