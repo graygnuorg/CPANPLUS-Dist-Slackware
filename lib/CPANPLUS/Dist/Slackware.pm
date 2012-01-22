@@ -105,6 +105,8 @@ sub prepare {
         $dist->_call_plugins('pre_prepare') or return;
 
         $dist->SUPER::prepare(@params) or return;
+
+        $dist->_call_plugins('post_prepare') or return;
     }
 
     return $status->prepared(1);

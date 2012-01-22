@@ -3,9 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets;
 use strict;
 use warnings;
 
-use File::Spec qw();
-
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -14,33 +12,13 @@ sub available {
 
 sub pre_prepare {
     my ( $plugin, $dist ) = @_;
+    $ENV{AWX_URL} = 'http://prdownloads.sourceforge.net/wxwindows';
+    return 1;
+}
 
-    my $module = $dist->parent;
-    my $cb     = $module->parent;
-
-    my $wrksrc = $module->status->extract;
-    if ( !$wrksrc ) {
-        return;
-    }
-
-    my $filename = File::Spec->catfile( $wrksrc, 'Build.PL' );
-    if ( !-f $filename ) {
-        return 1;
-    }
-
-    my $evil_eval = qr{
-        ^my \h* \$ok \h* = \h* eval \h* \{
-            .+?
-        ^\};
-    }xms;
-
-    my $build_pl = $dist->_read_file($filename);
-    return if !defined $build_pl;
-    if ( $build_pl =~ s/$evil_eval/my \$ok;/xms ) {
-        $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-        $dist->_write_file( $filename, $build_pl ) or return;
-    }
-
+sub post_prepare {
+    my ( $plugin, $dist ) = @_;
+    delete $ENV{AWX_URL};
     return 1;
 }
 
@@ -49,26 +27,24 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets - Fix the Alien::wxWidgets
-build
+CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets - Configure
+Alien::wxWidgets properly
 
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets> version 0.01.
+C<CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets> version 0.02.
 
 =head1 SYNOPSIS
 
     $is_available = $plugin->available($dist);
-    $success      = $plugin->pre_prepare($dist);
+    $success = $plugin->pre_prepare($dist);
+    $success = $plugin->post_prepare($dist);
 
 =head1 DESCRIPTION
 
-There's a pointless optimization in the Alien::wxWidgets module's F<Build.PL>
-that tries to detect whether the wxWidgets toolkit has already been built with
-Alien::wxWidgets.  Unfortunately, the wxWidgets libraries won't be put into
-the Slackware package because of this optimization if the package is rebuilt.
-This plugin patches the F<Build.PL> file accordingly.
+Make sure that Alien::wxWidgets does not check for local wxWidgets
+installations that were compiled using Alien::wxWidgets.
 
 =head1 SUBROUTINES/METHODS
 
@@ -80,7 +56,11 @@ Returns true if this plugin applies to the given distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Patches F<Build.PL>.  Returns true on success.
+Sets C<$ENV{AWX_URL}>.
+
+=item B<< $plugin->post_prepare($dist) >>
+
+Unsets C<$ENV{AWX_URL}>.
 
 =back
 
@@ -94,7 +74,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the module C<File::Spec>.
+None.
 
 =head1 INCOMPATIBILITIES
 
