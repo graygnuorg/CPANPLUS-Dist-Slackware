@@ -5,7 +5,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -23,21 +23,9 @@ sub pre_prepare {
         return;
     }
 
-    my $filename = File::Spec->catfile( $wrksrc, 'LibYAML', 'Makefile.PL' );
-    if ( !-f $filename ) {
-        return 1;
-    }
-
-    my $non_unique_file_list = qr/^\Q} glob("*.c"), 'LibYAML.c';\E/xms;
-
-    my $unique_file_list
-        = '} keys %{{ map { $_ => 1 } glob("*.c"), "LibYAML.c" }};';
-
-    my $makefile_pl = $dist->_read_file($filename);
-    return if !defined $makefile_pl;
-    if ( $makefile_pl =~ s/$non_unique_file_list/$unique_file_list/ ) {
-        $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-        $dist->_write_file( $filename, $makefile_pl ) or return;
+    my $filename = File::Spec->catfile( $wrksrc, 'LibYAML', 'LibYAML.c' );
+    if ( -f $filename ) {
+        $dist->_unlink($filename) or return;
     }
 
     return 1;
@@ -48,12 +36,12 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Fix F<LibYAML/Makefile.PL>
+CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Remove F<LibYAML/LibYAML.c>
 
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.01.
+C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.02.
 
 =head1 SYNOPSIS
 
@@ -72,11 +60,11 @@ Reported as bug #74238 at L<http://rt.cpan.org/>.
 
 =item B<< $plugin->available($dist) >>
 
-Returns true if this plugin applies to the given distribution.
+Returns true if this plugin applies to the given Perl distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Patches F<LibYAML/Makefile.PL>.  Returns true on success.
+Remove F<LibYAML/LibYAML.c> if necessary.
 
 =back
 
