@@ -43,8 +43,8 @@ C<CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets> version 0.02.
 
 =head1 DESCRIPTION
 
-Make sure that Alien::wxWidgets does not check for local wxWidgets
-installations that were compiled using Alien::wxWidgets.
+Make sure that Alien::wxWidgets does not check for wxWidgets installations
+that were compiled using Alien::wxWidgets.
 
 =head1 SUBROUTINES/METHODS
 
@@ -52,11 +52,12 @@ installations that were compiled using Alien::wxWidgets.
 
 =item B<< $plugin->available($dist) >>
 
-Returns true if this plugin applies to the given distribution.
+Returns true if this plugin applies to the given Perl distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Sets C<$ENV{AWX_URL}>.
+Sets C<$ENV{AWX_URL}>, which causes Alien::wxWidgets to ignore wxWidgets
+installations that were compiled using Alien::wxWidgets.
 
 =item B<< $plugin->post_prepare($dist) >>
 
