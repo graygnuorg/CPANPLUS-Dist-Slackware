@@ -1,8 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.04  2012-01-21 20:56:37 CET
+0.04  2012-01-24 07:25:41 CET
 
-- Check if a module is provided by Perl itself.
+- Add plugins, which may be used to fix quirks or customize packages.
+- Make sure that makepkg can access the staging directory if fakeroot is not
+  available.
 
 0.03  2012-01-18 14:51:26 CET
 

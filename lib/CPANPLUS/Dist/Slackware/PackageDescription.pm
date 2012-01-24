@@ -406,6 +406,8 @@ sub destdir {
                 or die "Could not create directory '$wrkdir': $OS_ERROR\n";
         }
         $destdir = File::Temp::tempdir( $template, DIR => $wrkdir );
+        chmod oct '0755', $destdir
+            or die "Could not chmod '$destdir': $OS_ERROR\n";
         $self->{destdir} = $destdir;
     }
     return $destdir;
