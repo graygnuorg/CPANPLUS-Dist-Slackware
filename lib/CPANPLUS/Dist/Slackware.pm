@@ -21,7 +21,7 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 my $README_SLACKWARE = 'README.SLACKWARE';
 
@@ -942,7 +942,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.04.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.05.
 
 =head1 SYNOPSIS
 
@@ -952,6 +952,7 @@ This documentation refers to C<CPANPLUS::Dist::Slackware> version 0.04.
 
     ### using the command-line tool
     $ cpan2dist --format CPANPLUS::Dist::Slackware Some::Module
+    $ sudo /sbin/installpkg /tmp/perl-Some-Module-1.0-i486-1_CPANPLUS.tgz
 
 =head1 DESCRIPTION
 
@@ -991,8 +992,8 @@ User settings are stored in F<$HOME/.cpanplus/lib/CPANPLUS/Config/User.pm>.
 
 Packages may also be created from the command-line.  Example:
 
-    $ cpan2dist --format CPANPLUS::Dist::Slackware Mojolicious
-    $ sudo /sbin/installpkg /tmp/perl-Mojolicious-2.43-i486-1_CPANPLUS.tgz
+    $ cpan2dist --format CPANPLUS::Dist::Slackware Smart::Comments
+    $ sudo /sbin/installpkg /tmp/perl-Smart-Comments-1.0.4-i486-1_CPANPLUS.tgz
 
 =head2 Managing packages as a non-root user
 

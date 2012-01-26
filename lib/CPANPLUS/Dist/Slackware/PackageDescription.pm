@@ -205,7 +205,7 @@ sub summary {
         || $module->description
         || $self->_summary_from_pod
         || q{};
-    $summary =~ s/\v+/ /g;    # Replace vertical whitespace.
+    $summary =~ s/[\r\n]+/ /g;    # Replace vertical whitespace.
     return $summary;
 }
 

@@ -1,12 +1,14 @@
-CPANPLUS-Dist-Slackware version 0.04
+CPANPLUS-Dist-Slackware version 0.05
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
-distributions.
+distributions.  You can either install the created packages using the API
+provided by CPANPLUS, or manually via "installpkg".
 
     $ cpanp
     CPAN Terminal> i Some::Module --format=CPANPLUS::Dist::Slackware
 
     $ cpan2dist --format CPANPLUS::Dist::Slackware Some::Module
+    $ sudo /sbin/installpkg /tmp/perl-Some-Module-1.0-i486-1_CPANPLUS.tgz
 
 INSTALLATION
 

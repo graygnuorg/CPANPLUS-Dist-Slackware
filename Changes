@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+0.05  2012-01-25 08:15:31 CET
+
+- 
+
 0.04  2012-01-24 07:25:41 CET
 
 - Add plugins, which may be used to fix quirks or customize packages.

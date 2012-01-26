@@ -20,7 +20,11 @@ my $builder = $class->new(
     dist_author         => q{Andreas Voegele <andreas@andreasvoegele.com>},
     dist_version_from   => 'lib/CPANPLUS/Dist/Slackware.pm',
     build_requires => {
+        'Module::Build' => 0.2808,
         'Test::More' => 0,
+    },
+    configure_requires => {
+        'Module::Build' => 0.2808,
     },
     requires => {
         'perl' => 5.010,
