@@ -13,7 +13,7 @@ use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -424,7 +424,7 @@ Slackware compatible package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 0.04.
+version 0.05.
 
 =head1 SYNOPSIS
 
