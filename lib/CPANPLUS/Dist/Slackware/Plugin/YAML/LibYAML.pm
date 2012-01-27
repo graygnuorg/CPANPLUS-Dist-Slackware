@@ -37,6 +37,7 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Remove F<LibYAML/LibYAML.c>
+if necessary
 
 =head1 VERSION
 
