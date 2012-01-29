@@ -714,13 +714,25 @@ sub _write_file {
     my ( $dist, $filename, @lines ) = @_;
 
     my $param_ref = ( ref $lines[0] eq 'HASH' ) ? shift @lines : {};
-    my $mode = ( $param_ref->{append} ) ? '>>' : '>';
+    my $mode      = ( $param_ref->{append} )    ? '>>'         : '>';
+    my $binmode   = $param_ref->{binmode};
 
     my $fh;
     if ( !open $fh, $mode, $filename ) {
         error(
             loc( q{Could not create file '%1': %2}, $filename, $OS_ERROR ) );
         return;
+    }
+
+    if ($binmode) {
+        if ( !binmode $fh, $binmode ) {
+            error(
+                loc(q{Could not set binmode for file '%1' to '%2': %3},
+                    $filename, $binmode, $OS_ERROR
+                )
+            );
+            return;
+        }
     }
 
     my $fail = 0;

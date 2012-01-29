@@ -1,8 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.05  2012-01-25 08:15:31 CET
+0.05  2012-01-29 19:56:19 CET
 
-- 
+- Add Padre plugin, which installs a desktop entry and an icon for Padre.
 
 0.04  2012-01-24 07:25:41 CET
 
