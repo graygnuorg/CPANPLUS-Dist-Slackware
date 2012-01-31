@@ -81,6 +81,7 @@ Exec=padre %F
 Icon=padre
 Categories=Development;IDE
 MimeType=application/x-perl
+Terminal=false
 END_ENTRY
     return $dist->_write_file( $filename, { binmode => ':utf8' }, $entry );
 }
