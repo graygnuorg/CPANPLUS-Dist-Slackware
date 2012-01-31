@@ -1103,14 +1103,48 @@ Returns true on success and false on failure.
 
 =back
 
+=head1 PLUGINS
+
+You can write plugins to patch or customize Perl distributions.  Put your
+plugins into the C<CPANPLUS::Dist::Slackware::Plugin> namespace.  Plugins can
+provide the following methods.
+
+=over 4
+
+=item B<< $plugin->available($dist) >>
+
+This method, which must exist, returns true if the plugin applies to the given
+distribution.
+
+=item B<< $plugin->pre_prepare($dist) >>
+
+Use this method to patch a distribution or to set environment variables that
+configure the distribution.  Called before the Perl distribution is prepared,
+i.e. before the command C<perl Makefile.PL> or C<perl Build.PL> is run.
+Returns true on success.
+
+=item B<< $plugin->post_prepare($dist) >>
+
+Use this method to, for example, unset previously set environment variables.
+Called after the Perl distribution has been prepared.  Returns true on
+success.
+
+=item B<< $plugin->pre_package($dist) >>
+
+This method is called after the Perl distribution has been installed in the
+temporary staging directory and before a Slackware compatible package is
+created.  Use this method to install additional files like init scripts or to
+append text to the F<README.SLACKWARE> file.  Returns true on success.
+
+=back
+
 =head1 DIAGNOSTICS
 
 =over 4
 
 =item B<< In order to manage packages as a non-root user... >>
 
-You are using CPANPLUS as a non-root user but C<sudo> is either not installed
-or not configured.
+You are using CPANPLUS as a non-root user but C<sudo> is not installed.
 
 =item B<< You do not have '/sbin/makepkg'... >>
 
