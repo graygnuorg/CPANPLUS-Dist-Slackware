@@ -1119,9 +1119,9 @@ distribution.
 =item B<< $plugin->pre_prepare($dist) >>
 
 Use this method to patch a distribution or to set environment variables that
-configure the distribution.  Called before the Perl distribution is prepared,
-i.e. before the command C<perl Makefile.PL> or C<perl Build.PL> is run.
-Returns true on success.
+help to configure the distribution.  Called before the Perl distribution is
+prepared, i.e. before the command C<perl Makefile.PL> or C<perl Build.PL> is
+run.  Returns true on success.
 
 =item B<< $plugin->post_prepare($dist) >>
 
