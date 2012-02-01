@@ -141,11 +141,11 @@ sub create {
 
     $dist->_make_installdir($param_ref) or return;
 
-    $dist->_write_config_files($param_ref) or return;
-
     $dist->_write_slack_desc($param_ref) or return;
 
     $dist->_call_plugins('pre_package') or return;
+
+    $dist->_write_config_files($param_ref) or return;
 
     $dist->_makepkg($param_ref) or return;
 

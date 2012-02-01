@@ -243,6 +243,11 @@ config() {
         if [ "$NEWCKSUM" = "$OLDCKSUM" ]; then
             # toss the redundant copy
             rm "$NEW"
+        else
+            # preserve perms
+            cp -p "$OLD" "${NEW}.incoming"
+            cat "$NEW" > "${NEW}.incoming"
+            mv "${NEW}.incoming" "$NEW"
         fi
     elif [ -h "$NEW" -a -h "$OLD" ]; then
         NEWLINK=$(readlink -n "$NEW")
