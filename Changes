@@ -1,8 +1,11 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.05  2012-01-29 19:56:19 CET
+0.05  2012-02-01 11:10:17 CET
 
+- Document the plugin interface.
 - Add Padre plugin, which installs a desktop entry and an icon for Padre.
+- Don't prepend "perl-" to module names like "perl-ldap" that already start
+  with "perl-".
 
 0.04  2012-01-24 07:25:41 CET
 

@@ -27,7 +27,17 @@ sub module {
 
 sub name {
     my $self = shift;
-    return $self->{name} || 'perl-' . $self->module->package_name;
+    my $name = $self->{name};
+    if ( !$name ) {
+        $name = $self->module->package_name;
+
+        # Prepend "perl-" unless the name starts with "perl-".
+        if ( $name !~ /^perl-/ ) {
+            $name = 'perl-' . $name;
+        }
+        $self->{name} = $name;
+    }
+    return $name;
 }
 
 sub version {
