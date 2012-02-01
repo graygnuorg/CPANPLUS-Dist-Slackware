@@ -1,9 +1,11 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-0.05  2012-02-01 11:10:17 CET
+0.05  2012-02-01 19:31:33 CET
 
 - Document the plugin interface.
 - Add Padre plugin, which installs a desktop entry and an icon for Padre.
+- Add Mail::SpamAssassin plugin, which installs an init script and additional
+  documentation.
 - Don't prepend "perl-" to module names like "perl-ldap" that already start
   with "perl-".
 
