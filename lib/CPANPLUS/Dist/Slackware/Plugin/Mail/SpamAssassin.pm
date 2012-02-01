@@ -18,8 +18,6 @@ sub pre_package {
     $plugin->_install_init_script($dist) or return;
     $plugin->_install_docfiles($dist)    or return;
 
-    # XXX Append text to README.SLACKWARE (see below).
-
     return 1;
 }
 
@@ -66,7 +64,17 @@ sub _install_init_script {
 sub _install_docfiles {
     my ( $plugin, $dist ) = @_;
 
+    my $status  = $dist->status;
+    my $pkgdesc = $status->_pkgdesc;
+
+    my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
+
+    my $readme = $plugin->_readme_slackware_addendum;
+    my $readmefile = File::Spec->catfile( $docdir, 'README.SLACKWARE' );
+    $dist->_write_file( $readmefile, { append => 1 }, $readme ) or return;
+
     # XXX Install additional files.
+
     return 1;
 }
 
@@ -75,7 +83,7 @@ sub _readme_slackware_addendum {
 
     return <<'END_README';
 
-Optional Modules
+Optional modules
 ----------------
 
 See the INSTALL file for a list of modules that SpamAssassin can optionally
@@ -86,12 +94,12 @@ utilize.  Among the optional modules are:
 * Mail::SPF
 * Net::LDAP
 
-Downloading the SpamAssassin Ruleset
+Downloading the SpamAssassin ruleset
 ------------------------------------
 
 After installing SpamAssassin, you need to download and install the
 SpamAssassin ruleset using "sa-update".  See the README file for details.  If
-you don't want to run "sa-update" as root, create a dedicated account and the
+you don't want to run "sa-update" as root, create a dedicated account and a
 required key directory before you run "sa-update".  Example:
 
     useradd -u 400 -r -U -c "User for SpamAssassin rule updates" \
@@ -107,7 +115,7 @@ can be compiled into native code to speed up SpamAssassin's operation:
 
     su sa-update -c /usr/bin/sa-compile
 
-The compiled rules are used if the Rule2XSBody plugin is enabled in
+The compiled rules are loaded if the Rule2XSBody plugin is enabled in
 SpamAssassin's configuration.
 
 If you want to keep the ruleset up-to-date, create a weekly or monthly cron
@@ -123,7 +131,7 @@ job that runs a shell script like the following one:
         fi
     fi
 
-Running the SpamAssassin Daemon
+Running the SpamAssassin daemon
 -------------------------------
 
 To enable spamd, add the execute permissions to the /etc/rc.d/rc.spamd init

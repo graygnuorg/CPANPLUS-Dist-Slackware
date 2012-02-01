@@ -23,8 +23,6 @@ local $Params::Check::VERBOSE = 1;
 
 our $VERSION = '0.05';
 
-my $README_SLACKWARE = 'README.SLACKWARE';
-
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
 you must have sudo and, optionally, fakeroot.
@@ -455,7 +453,7 @@ sub _install_docfiles {
 
     # Create README.SLACKWARE.
     my $readme = $pkgdesc->readme_slackware;
-    my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
+    my $readmefile = File::Spec->catfile( $docdir, 'README.SLACKWARE' );
     $dist->_write_file( $readmefile, $readme ) or return;
 
     # Create perl-Some-Module.SlackBuild.
@@ -668,11 +666,13 @@ sub _append_config_files_to_readme_slackware {
 
     my $readme
         = "\n"
-        . "This package provides the following configuration files:\n" . "\n"
+        . "Configuration files\n"
+        . "-------------------\n\n"
+        . "This package provides the following configuration files:\n\n"
         . join( "\n", map {"* /$_"} @conffiles ) . "\n";
 
     my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
-    my $readmefile = File::Spec->catfile( $docdir, $README_SLACKWARE );
+    my $readmefile = File::Spec->catfile( $docdir, 'README.SLACKWARE' );
     return $dist->_write_file( $readmefile, { append => 1 }, $readme );
 }
 
