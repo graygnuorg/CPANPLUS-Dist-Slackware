@@ -32,9 +32,7 @@ sub _install_init_script {
     my $destdir = $pkgdesc->destdir;
 
     my $wrksrc = $module->status->extract;
-    if ( !$wrksrc ) {
-        return;
-    }
+    return if !$wrksrc;
 
     my $script;
     my $srcfile
@@ -65,7 +63,12 @@ sub _install_docfiles {
     my ( $plugin, $dist ) = @_;
 
     my $status  = $dist->status;
+    my $module  = $dist->parent;
+    my $cb      = $module->parent;
     my $pkgdesc = $status->_pkgdesc;
+
+    my $wrksrc = $module->status->extract;
+    return if !$wrksrc;
 
     my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
 
@@ -73,9 +76,37 @@ sub _install_docfiles {
     my $readmefile = File::Spec->catfile( $docdir, 'README.SLACKWARE' );
     $dist->_write_file( $readmefile, { append => 1 }, $readme ) or return;
 
-    # XXX Install additional files.
+    my @docfiles = qw(
+        INSTALL
+        ldap
+        NOTICE
+        PACKAGING
+        procmailrc.example
+        sample-nonspam.txt
+        sample-spam.txt
+        sql
+        TRADEMARK
+        UPGRADE
+        USAGE
+    );
 
-    return 1;
+    my $fail = 0;
+    for my $docfile (@docfiles) {
+        my $from = File::Spec->catfile( $wrksrc, $docfile );
+        if ( -f $from ) {
+            if ( !$cb->_copy( file => $from, to => $docdir ) ) {
+                ++$fail;
+            }
+        }
+        elsif ( -d $from ) {
+            my $cmd = [ '/bin/cp', '-R', $from, $docdir ];
+            if ( !$dist->_run_command($cmd) ) {
+                ++$fail;
+            }
+        }
+    }
+
+    return ( $fail ? 0 : 1 );
 }
 
 sub _readme_slackware_addendum {
@@ -100,7 +131,7 @@ Downloading the SpamAssassin ruleset
 After installing SpamAssassin, you need to download and install the
 SpamAssassin ruleset using "sa-update".  See the README file for details.  If
 you don't want to run "sa-update" as root, create a dedicated account and a
-required key directory before you run "sa-update".  Example:
+required directory before you run "sa-update".  Example:
 
     useradd -u 400 -r -U -c "User for SpamAssassin rule updates" \
         -m -d /var/lib/spamassassin sa-update
@@ -205,7 +236,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the module C<File::Spec>.
+Requires the module C<File::Spec> and the command C<cp>.
 
 =head1 INCOMPATIBILITIES
 

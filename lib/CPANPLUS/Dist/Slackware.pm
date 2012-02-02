@@ -447,7 +447,6 @@ sub _install_docfiles {
 
     my @docfiles = $pkgdesc->docfiles;
 
-    # Create docdir.
     my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
     $cb->_mkdir( dir => $docdir ) or return;
 
@@ -462,7 +461,7 @@ sub _install_docfiles {
         = File::Spec->catfile( $docdir, $pkgdesc->name . '.SlackBuild' );
     $dist->_write_file( $scriptfile, $script ) or return;
 
-    # Copy docfiles like README and Changes.
+    # Copy files like README and Changes.
     my $fail = 0;
     for my $docfile (@docfiles) {
         my $from = File::Spec->catfile( $wrksrc, $docfile );
@@ -1245,7 +1244,7 @@ recursively.
 
 Requires the Slackware Linux package management tools C<makepkg>,
 C<installpkg>, C<updatepkg>, and C<removepkg>.  Other required commands are
-C<file>, C<gcc>, C<make>, and C<strip>.
+C<chown>, C<file>, C<gcc>, C<make>, and C<strip>.
 
 In order to manage packages as a non-root user, which is highly recommended,
 you must have C<sudo> and, optionally, C<fakeroot>.  You can download a script
