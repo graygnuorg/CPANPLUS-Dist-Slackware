@@ -166,7 +166,6 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::Padre - Install a desktop entry and an icon
-for Padre.
 
 =head1 VERSION
 
