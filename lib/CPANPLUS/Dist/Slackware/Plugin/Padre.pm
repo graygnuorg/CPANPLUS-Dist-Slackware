@@ -6,7 +6,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -49,6 +49,7 @@ sub _install_icon {
     $cb->_mkdir( dir => $icondir ) or return;
 
     my $iconfile = File::Spec->catfile( $icondir, 'padre.png' );
+    return 1 if -f $iconfile;
     return $dist->_write_file( $iconfile, { binmode => ':raw' }, $pngdata );
 }
 
@@ -66,6 +67,7 @@ sub _write_desktop_entry {
         = File::Spec->catdir( $destdir, 'usr', 'share', 'applications' );
     $cb->_mkdir( dir => $appdir ) or return;
     my $filename = File::Spec->catfile( $appdir, 'padre.desktop' );
+    return 1 if -f $filename;
     my $entry = <<'END_ENTRY';
 [Desktop Entry]
 Name=Padre
@@ -170,7 +172,7 @@ CPANPLUS::Dist::Slackware::Plugin::Padre - Install a desktop entry and an icon
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 0.01.
+C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 0.02.
 
 =head1 SYNOPSIS
 
