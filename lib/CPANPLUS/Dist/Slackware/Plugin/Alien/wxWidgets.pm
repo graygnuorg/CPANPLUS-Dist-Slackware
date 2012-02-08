@@ -28,7 +28,7 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets - Configure
-Alien::wxWidgets properly
+Alien::wxWidgets
 
 =head1 VERSION
 

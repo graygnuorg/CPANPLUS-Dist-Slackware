@@ -42,7 +42,7 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::YAML::Syck - Patch C<YAML::Syck> if
-necessary.
+necessary
 
 =head1 VERSION
 

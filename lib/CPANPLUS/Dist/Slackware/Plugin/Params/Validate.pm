@@ -42,7 +42,7 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::Params::Validate - Patch
-C<Params::Validate> if necessary.
+C<Params::Validate> if necessary
 
 =head1 VERSION
 
