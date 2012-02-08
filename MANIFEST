@@ -14,7 +14,9 @@ lib/CPANPLUS/Dist/Slackware/PackageDescription.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/Alien/wxWidgets.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/Mail/SpamAssassin.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/Padre.pm
+lib/CPANPLUS/Dist/Slackware/Plugin/Params/Validate.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/YAML/LibYAML.pm
+lib/CPANPLUS/Dist/Slackware/Plugin/YAML/Syck.pm
 t/00-load.t
 t/boilerplate.t
 t/manifest.t

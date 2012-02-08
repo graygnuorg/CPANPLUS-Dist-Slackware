@@ -1,15 +1,15 @@
-package CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML;
+package CPANPLUS::Dist::Slackware::Plugin::YAML::Syck;
 
 use strict;
 use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.03';
+our $VERSION = '0.01';
 
 sub available {
     my ( $plugin, $dist ) = @_;
-    return ( $dist->parent->package_name eq 'YAML-LibYAML' );
+    return ( $dist->parent->package_name eq 'YAML-Syck' );
 }
 
 sub pre_prepare {
@@ -21,18 +21,13 @@ sub pre_prepare {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    # See L<https://rt.cpan.org/Ticket/Display.html?id=74238>.
-    my $filename = File::Spec->catfile( $wrksrc, 'LibYAML', 'LibYAML.c' );
-    if ( -f $filename ) {
-        $dist->_unlink($filename) or return;
-    }
-
-    # See L<https://rt.cpan.org/Ticket/Display.html?id=46507>.
-    $filename = File::Spec->catfile( $wrksrc, 'LibYAML', 'perl_libyaml.c' );
+    # See L<https://rt.cpan.org/Ticket/Display.html?id=74785>.
+    my $filename = File::Spec->catfile( $wrksrc, 'perl_common.h' );
     if ( -f $filename ) {
         my $code = $dist->_read_file($filename);
-        if ( $code =~ /croak\(\s*loader_error_msg/xms ) {
-            $code =~ s/croak\((\s*loader_error_msg)/croak("%s",$1/gxms;
+        if ( $code =~ /croak\(form\(/xms ) {
+            $code =~ s/croak\(form\(\s*(.+?)\)\)/croak($1)/xms;
+            $code =~ s/^(\s*)(p->cursor[ ]-[ ]p->lineptr),/$1(long) ($2),/xms;
             $cb->_move( file => $filename, to => "$filename.orig" ) or return;
             $dist->_write_file( $filename, $code ) or return;
         }
@@ -46,13 +41,13 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML - Patch C<YAML::LibYAML> if
-necessary
+CPANPLUS::Dist::Slackware::Plugin::YAML::Syck - Patch C<YAML::Syck> if
+necessary.
 
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.03.
+C<CPANPLUS::Dist::Slackware::Plugin::YAML::Syck> version 0.01.
 
 =head1 SYNOPSIS
 
@@ -61,11 +56,8 @@ C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.03.
 
 =head1 DESCRIPTION
 
-If YAML::LibYAML is built a second time the build fails since
-F<LibYAML/Makefile.PL> adds F<LibYAML.o> twice to the list of object files.
-Reported as bug #74238 at L<http://rt.cpan.org/>.  Compiling
-F<LibYAML/perl_libyaml.c> with C<-Werror=format-security> fails.  Reported as
-bug #46507.
+Compiling F<perl_common.h> with C<-Werror=format-security> fails.
+Reported as bug #74785 at L<http://rt.cpan.org/>.
 
 =head1 SUBROUTINES/METHODS
 
@@ -77,7 +69,7 @@ Returns true if this plugin applies to the given Perl distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Remove F<LibYAML/LibYAML.c> and patch F<LibYAML/perl_libyaml.c>.
+Patch F<perl_common.h> if necessary.
 
 =back
 
