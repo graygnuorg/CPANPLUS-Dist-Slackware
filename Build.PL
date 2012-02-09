@@ -43,6 +43,7 @@ my $builder = $class->new(
         'Pod::Simple' => 0,
         'POSIX' => 0,
         'Text::Wrap' => 0,
+        'version' => 0.77,
     },
     add_to_cleanup      => [ 'CPANPLUS-Dist-Slackware-*' ],
     create_makefile_pl => 'traditional',

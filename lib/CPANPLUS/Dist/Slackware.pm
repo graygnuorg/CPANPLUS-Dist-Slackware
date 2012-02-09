@@ -237,7 +237,6 @@ sub _fake_install {
     my $status  = $dist->status;
     my $module  = $dist->parent;
     my $pkgdesc = $status->_pkgdesc;
-    my $srcname = $module->module;
 
     my $verbose = $param_ref->{verbose};
 
@@ -265,7 +264,7 @@ sub _fake_install {
         return;
     }
 
-    msg( loc( q{Staging '%1' in '%2'}, $srcname, $destdir ) );
+    msg( loc( q{Staging distribution in '%2'}, $destdir ) );
 
     return $dist->_run_command( $cmd,
         { dir => $wrksrc, verbose => $verbose } );
@@ -456,9 +455,9 @@ sub _install_docfiles {
     $dist->_write_file( $readmefile, $readme ) or return;
 
     # Create perl-Some-Module.SlackBuild.
-    my $script = $pkgdesc->build_script;
-    my $scriptfile
-        = File::Spec->catfile( $docdir, $pkgdesc->name . '.SlackBuild' );
+    my $script     = $pkgdesc->build_script;
+    my $scriptfile = File::Spec->catfile( $docdir,
+        $pkgdesc->normalized_name . '.SlackBuild' );
     $dist->_write_file( $scriptfile, $script ) or return;
 
     # Copy files like README and Changes.
@@ -476,8 +475,9 @@ sub _install_docfiles {
 sub _verify_filename {
     my ( $dist, $filename ) = @_;
 
-    my $module  = $dist->parent;
-    my $srcname = $module->module;
+    my $status  = $dist->status;
+    my $pkgdesc = $status->_pkgdesc;
+    my $name    = $pkgdesc->normalized_name;
 
     my $general_whitelist = qr{ /(?:etc|usr|var|opt)/ }xms;
 
@@ -495,17 +495,15 @@ sub _verify_filename {
     $filename = substr $filename, 1;    # Remove leading '.'.
     if ( $filename !~ $general_whitelist ) {
         error(
-            loc(q{Blacklisted file found in '%1': '%2'}, $srcname,
-                $filename
-            )
+            loc( q{Blacklisted file found in '%1': '%2'}, $name, $filename )
         );
         return;
     }
     elsif ( $filename =~ $command ) {
-        msg( loc( q{'%1' provides command '%2'}, $srcname, $filename ) );
+        msg( loc( q{'%1' provides command '%2'}, $name, $filename ) );
     }
     elsif ( $filename !~ $standard_whitelist ) {
-        msg( loc( q{'%1' provides extra file '%2'}, $srcname, $filename ) );
+        msg( loc( q{'%1' provides extra file '%2'}, $name, $filename ) );
     }
     return 1;
 }
@@ -1252,8 +1250,7 @@ that builds C<fakeroot> from L<http://slackbuilds.org/>.
 
 C<CPANPLUS::Dist::Slackware> requires the modules C<CPANPLUS>, C<Cwd>,
 C<File::Find>, C<File::Spec>, C<IO::Compress::Gzip>, C<IPC:Cmd>,
-C<Locale::Maketext::Simple>, and C<Params::Check>, which are all provided by
-Perl 5.10.
+C<Locale::Maketext::Simple>, and C<Params::Check>.
 
 =head1 INCOMPATIBILITIES
 

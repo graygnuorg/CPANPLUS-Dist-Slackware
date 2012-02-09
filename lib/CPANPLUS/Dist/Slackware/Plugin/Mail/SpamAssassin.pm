@@ -118,12 +118,11 @@ Optional modules
 ----------------
 
 See the INSTALL file for a list of modules that SpamAssassin can optionally
-utilize.  Among the optional modules are:
+utilize.  Among the optional packages are:
 
-* DBI
-* IP::Country
-* Mail::SPF
-* Net::LDAP
+* perl-IP-Country
+* perl-Mail-SPF
+* perl-ldap
 
 Downloading the SpamAssassin ruleset
 ------------------------------------

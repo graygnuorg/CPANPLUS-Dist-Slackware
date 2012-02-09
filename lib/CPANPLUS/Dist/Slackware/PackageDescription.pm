@@ -12,8 +12,9 @@ use Pod::Find qw();
 use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
+use version 0.77 qw();
 
-our $VERSION = '0.06';
+our $VERSION = '1.00';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -25,29 +26,51 @@ sub module {
     return $self->{module};
 }
 
-sub name {
-    my $self = shift;
-    my $name = $self->{name};
-    if ( !$name ) {
-        $name = $self->module->package_name;
+sub _normalize_name {
+    my $name = shift;
 
-        # Prepend "perl-" unless the name starts with "perl-".
-        if ( $name !~ /^perl-/ ) {
-            $name = 'perl-' . $name;
-        }
-        $self->{name} = $name;
+    # Prepend "perl-" unless the name starts with "perl-".
+    if ( $name !~ /^perl-/ ) {
+        $name = 'perl-' . $name;
     }
     return $name;
 }
 
-sub version {
+sub _normalize_version {
+    my $version = shift;
+
+    if ( !defined $version ) {
+        $version = 0;
+    }
+    else {
+        $version =~ s/^v//;
+    }
+    return $version;
+}
+
+sub normalized_name {
     my $self = shift;
-    return $self->{version} || $self->module->package_version;
+    my $name = $self->{normalized_name};
+    if ( !$name ) {
+        $name = _normalize_name( $self->module->package_name );
+        $self->{normalized_name} = $name;
+    }
+    return $name;
+}
+
+sub normalized_version {
+    my $self    = shift;
+    my $version = $self->{normalized_version};
+    if ( !$version ) {
+        $version = _normalize_version( $self->module->package_version );
+        $self->{normalized_version} = $version;
+    }
+    return $version;
 }
 
 sub distname {
     my $self = shift;
-    return $self->name . q{-} . $self->version;
+    return $self->normalized_name . q{-} . $self->normalized_version;
 }
 
 sub build {
@@ -282,7 +305,7 @@ END_DESC
 sub slack_desc {
     my $self = shift;
 
-    my $name    = $self->name;
+    my $name    = $self->normalized_name;
     my $prefix  = "$name:";
     my $title   = "$prefix $name";
     my $summary = $self->summary;
@@ -353,38 +376,47 @@ sub _prereqs {
     my $module = $self->module;
     my $cb     = $module->parent;
 
-    my @prereqs;
+    my %prereqs;
     my $prereq_ref = $module->status->prereqs;
     if ($prereq_ref) {
-        for my $srcname ( sort { uc $a cmp uc $b } keys %{$prereq_ref} ) {
+        for my $srcname ( keys %{$prereq_ref} ) {
             my $modobj = $cb->module_tree($srcname);
             next if !$modobj;
             next if $modobj->package_is_perl_core;
             my $version = $prereq_ref->{$srcname};
             next if Module::CoreList->first_release( $srcname, $version );
 
-            push @prereqs, { srcname => $srcname, version => $version };
+            my $name = _normalize_name( $modobj->package_name );
+            if ( !exists $prereqs{$name}
+                || version->parse( $prereqs{$name} )
+                < version->parse($version) )
+            {
+                $prereqs{$name} = $version;
+            }
         }
     }
+    my @prereqs
+        = map { { name => $_, version => _normalize_version( $prereqs{$_} ) } }
+        sort { uc $a cmp uc $b } keys %prereqs;
     return @prereqs;
 }
 
 sub readme_slackware {
     my $self    = shift;
     my $module  = $self->module;
-    my $srcname = $module->module;
+    my $name    = $module->package_name;
     my $version = $module->package_version;
 
     $columns = 78;
 
-    my $title  = "$srcname for Slackware Linux";
+    my $title  = "$name for Slackware Linux";
     my $line   = q{=} x length $title;
     my $readme = "$title\n$line\n\n";
 
     my @prereqs = $self->_prereqs;
 
     my $text = 'This package was created by CPANPLUS::Dist::Slackware'
-        . " from the Perl distribution '$srcname' version $version.";
+        . " from the Perl distribution '$name' version $version.";
     $readme .= Text::Wrap::wrap( q{}, q{}, $text ) . "\n";
 
     if (@prereqs) {
@@ -392,11 +424,11 @@ sub readme_slackware {
             .= "\n"
             . "Required modules\n"
             . "----------------\n\n"
-            . "The following Perl modules are required:\n\n";
+            . "The following Perl packages are required:\n\n";
         for my $prereq (@prereqs) {
-            my $prereq_srcname = $prereq->{srcname};
+            my $prereq_name    = $prereq->{name};
             my $prereq_version = $prereq->{version};
-            $readme .= "* $prereq_srcname";
+            $readme .= "* $prereq_name";
             if ( $prereq_version ne '0' ) {
                 $readme .= " >= $prereq_version";
             }
@@ -414,7 +446,7 @@ sub destdir {
     my $cb      = $module->parent;
     my $destdir = $self->{destdir};
     if ( !$destdir ) {
-        my $template = 'package-' . $self->name . '-XXXXXXXXXX';
+        my $template = 'package-' . $self->normalized_name . '-XXXXXXXXXX';
         my $wrkdir   = $ENV{TMP}
             || File::Spec->catdir( File::Spec->tmpdir, 'CPANPLUS' );
         if ( !-d $wrkdir ) {
@@ -440,7 +472,7 @@ package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 0.06.
+version 1.00.
 
 =head1 SYNOPSIS
 
@@ -487,11 +519,11 @@ optional.
 
 Returns the C<CPANPLUS::Module> object that was passed to the constructor.
 
-=item B<< $pkgdesc->name >>
+=item B<< $pkgdesc->normalized_name >>
 
 Returns the package name, e.g. "perl-Some-Module".
 
-=item B<< $pkgdesc->version >>
+=item B<< $pkgdesc->normalized_version >>
 
 Returns the package version, e.g. "0.01".
 
@@ -607,8 +639,8 @@ variables.
 =head1 DEPENDENCIES
 
 Requires the modules C<File::Spec>, C<File::Temp>, C<Pod::Find>,
-C<Pod::Simple>, C<POSIX>, and C<Text::Wrap>, which are all provided by Perl
-5.10.  If available, the module C<Parse::CPAN::Meta> is used.
+C<Pod::Simple>, C<POSIX>, C<Text::Wrap>, and C<version> 0.77.  If available,
+the module C<Parse::CPAN::Meta> is used.
 
 =head1 INCOMPATIBILITIES
 
