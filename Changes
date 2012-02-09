@@ -1,10 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.00  2012-02-08 18:50:19 CET
+1.00  2012-02-09 08:28:47 CET
 
-- Update the YAML::LibYAML plugin.  Add plugins for Params::Validate and
-  YAML::Syck.  Fixes errors that occur when the modules are built with the GCC
-  compiler flag "-Werror=format-security".
+- Update the YAML::LibYAML plugin.  Add YAML::Syck plugin.  Fixes errors that
+  occur when these modules are built with the GCC compiler flag
+  "-Werror=format-security".
 
 0.05  2012-02-01 19:31:33 CET
 
