@@ -388,6 +388,7 @@ sub _prereqs {
             my $modobj = $cb->module_tree($srcname);
             next if !$modobj;
             next if $modobj->package_is_perl_core;
+            next if $modobj->package_name eq 'Task-Weaken';
             my $version = $prereq_ref->{$srcname};
             next if Module::CoreList->first_release( $srcname, $version );
 
