@@ -29,6 +29,11 @@ sub module {
 sub _normalize_name {
     my $name = shift;
 
+    # Remove "-perl" from the end of the name.
+    if ( $name ne 'uni-perl' ) {
+        $name =~ s/-perl$//;
+    }
+
     # Prepend "perl-" unless the name starts with "perl-".
     if ( $name !~ /^perl-/ ) {
         $name = 'perl-' . $name;
