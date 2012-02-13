@@ -1,6 +1,6 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.00  2012-02-09 16:51:27 CET
+1.00  2012-02-13 09:48:12 CET
 
 - List required packages instead of module names in README.SLACKWARE.
 - Update the YAML::LibYAML plugin.  Add YAML::Syck plugin.  Fix errors that
