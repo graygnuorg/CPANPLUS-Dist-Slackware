@@ -7,6 +7,7 @@ Revision history for CPANPLUS-Dist-Slackware
   occur when these modules are built with the GCC compiler flag
   "-Werror=format-security".
 - Add Convert::BinHex plugin, which fixes a bug in the module's test suite.
+- Add Net::Pcap plugin, which fixes the module's Makefile.PL.
 
 0.05  2012-02-01 19:31:33 CET
 
