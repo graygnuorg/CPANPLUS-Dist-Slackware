@@ -17,7 +17,6 @@ lib/CPANPLUS/Dist/Slackware/Plugin/Mail/SpamAssassin.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/Net/Pcap.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/Padre.pm
 lib/CPANPLUS/Dist/Slackware/Plugin/YAML/LibYAML.pm
-lib/CPANPLUS/Dist/Slackware/Plugin/YAML/Syck.pm
 t/00-load.t
 t/boilerplate.t
 t/manifest.t
