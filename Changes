@@ -1,7 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.01  2012-02-16 08:01:50 CET
+1.01  2012-02-21 06:35:23 CET
 
+- The Padre plugin creates a doinst.sh file that runs update-desktop-database
+  and gtk-update-icon-cache.
 - The YAML::Syck plugin is no longer needed.
 
 1.00  2012-02-13 09:48:12 CET

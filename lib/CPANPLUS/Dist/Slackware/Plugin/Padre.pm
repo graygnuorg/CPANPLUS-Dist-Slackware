@@ -6,7 +6,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -18,6 +18,7 @@ sub pre_package {
 
     $plugin->_install_icon($dist)        or return;
     $plugin->_write_desktop_entry($dist) or return;
+    $plugin->_write_doinst_sh($dist)     or return;
 
     return 1;
 }
@@ -86,6 +87,31 @@ MimeType=application/x-perl
 Terminal=false
 END_ENTRY
     return $dist->_write_file( $filename, { binmode => ':utf8' }, $entry );
+}
+
+sub _write_doinst_sh {
+    my ( $plugin, $dist ) = @_;
+
+    my $status  = $dist->status;
+    my $module  = $dist->parent;
+    my $cb      = $module->parent;
+    my $pkgdesc = $status->_pkgdesc;
+
+    my $destdir = $pkgdesc->destdir;
+
+    my $script = <<'END_SCRIPT';
+if [ -x /usr/bin/update-desktop-database ]; then
+    /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
+fi
+if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
+    if [ -x /usr/bin/gtk-update-icon-cache ]; then
+        /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
+    fi
+fi
+END_SCRIPT
+    my $installdir = File::Spec->catdir( $destdir, 'install' );
+    my $doinstfile = File::Spec->catfile( $installdir, 'doinst.sh' );
+    return $dist->_write_file( $doinstfile, { append => 1 }, $script );
 }
 
 1;
@@ -172,7 +198,7 @@ CPANPLUS::Dist::Slackware::Plugin::Padre - Install a desktop entry and an icon
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 0.02.
+C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 0.03.
 
 =head1 SYNOPSIS
 

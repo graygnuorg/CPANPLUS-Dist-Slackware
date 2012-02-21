@@ -652,7 +652,7 @@ sub _write_config_files {
 
     my $installdir = File::Spec->catdir( $pkgdesc->destdir, 'install' );
     my $doinstfile = File::Spec->catfile( $installdir, 'doinst.sh' );
-    return $dist->_write_file( $doinstfile, $script );
+    return $dist->_write_file( $doinstfile, { append => 1 }, $script );
 }
 
 sub _append_config_files_to_readme_slackware {
