@@ -14,7 +14,7 @@ use POSIX qw();
 use Text::Wrap qw($columns);
 use version 0.77 qw();
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -478,7 +478,7 @@ package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 1.00.
+version 1.01.
 
 =head1 SYNOPSIS
 
@@ -658,7 +658,7 @@ C<CPANPLUS::Dist::Slackware>
 
 =head1 AUTHOR
 
-Andreas Voegele, C<< <andreas at andreasvoegele.com> >>
+Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 

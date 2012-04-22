@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -33,7 +33,7 @@ Alien::wxWidgets
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets> version 0.02.
+C<CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets> version 0.03.
 
 =head1 SYNOPSIS
 
@@ -87,7 +87,7 @@ C<CPANPLUS::Dist::Slackware>
 
 =head1 AUTHOR
 
-Andreas Voegele, C<< <andreas at andreasvoegele.com> >>
+Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 

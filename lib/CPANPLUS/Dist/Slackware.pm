@@ -1264,7 +1264,7 @@ C<CPANPLUS::Dist::Build>, C<CPANPLUS::Dist::Base>
 
 =head1 AUTHOR
 
-Andreas Voegele, C<< <andreas at andreasvoegele.com> >>
+Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 
