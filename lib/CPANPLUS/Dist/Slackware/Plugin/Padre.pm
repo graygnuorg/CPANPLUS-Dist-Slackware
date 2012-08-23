@@ -6,7 +6,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.04';
+our $VERSION = '1.010';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -198,7 +198,7 @@ CPANPLUS::Dist::Slackware::Plugin::Padre - Install a desktop entry and an icon
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 0.04.
+C<CPANPLUS::Dist::Slackware::Plugin::Padre> version 1.010.
 
 =head1 SYNOPSIS
 

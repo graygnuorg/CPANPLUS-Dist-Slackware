@@ -5,7 +5,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.02';
+our $VERSION = '1.010';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -46,7 +46,7 @@ necessary
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Convert::BinHex> version 0.02.
+C<CPANPLUS::Dist::Slackware::Plugin::Convert::BinHex> version 1.010.
 
 =head1 SYNOPSIS
 

@@ -5,7 +5,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '0.04';
+our $VERSION = '1.010';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -52,7 +52,7 @@ necessary
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 0.04.
+C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 1.010.
 
 =head1 SYNOPSIS
 

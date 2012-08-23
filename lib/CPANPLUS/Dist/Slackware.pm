@@ -21,7 +21,7 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '1.01';
+our $VERSION = '1.010';
 
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
@@ -951,7 +951,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.01.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.010.
 
 =head1 SYNOPSIS
 
