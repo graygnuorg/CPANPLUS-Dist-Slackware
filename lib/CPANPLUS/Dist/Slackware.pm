@@ -21,7 +21,7 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '1.010';
+our $VERSION = '1.011';
 
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
@@ -951,7 +951,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.010.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.011.
 
 =head1 SYNOPSIS
 
@@ -1223,6 +1223,13 @@ The package architecture.  Defaults to "i486" on x86-based platforms, to "arm"
 on ARM-based platforms and to the system's hardware identifier, i.e. the
 output of C<uname -m> on all other platforms.
 
+=item B<BUILD>
+
+The build number that is added to the filename.  Defaults to "1".
+
+As packages may be built recursively, setting this variable is mainly useful
+when rebuilding all packages after upgrading Perl.
+
 =item B<TAG>
 
 This tag is added to the package filename.  Defaults to "_CPANPLUS".
@@ -1234,9 +1241,6 @@ The package extension.  Defaults to "tgz".  May be set to "tbz", "tlz" or
 C<xz>, needs to be installed on the machine.
 
 =back
-
-The environment variable B<BUILD> is ignored as packages may be built
-recursively.
 
 =head1 DEPENDENCIES
 
@@ -1264,7 +1268,7 @@ C<CPANPLUS::Dist::Build>, C<CPANPLUS::Dist::Base>
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
+Andreas Voegele  C<< <voegelas@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -1277,7 +1281,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 Andreas Voegele
+Copyright (c) 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

@@ -1,5 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.011  2013-05-20 10:38:19 CEST
+
+- Respect the environment variable BUILD, which is mainly useful when
+  rebuilding all packages after upgrading Perl.
+
 1.010  2012-08-23 03:12:31 CEST
 
 - Use three digit version numbers.  Use the same version number everywhere.

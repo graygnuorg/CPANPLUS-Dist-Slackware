@@ -1,4 +1,4 @@
-CPANPLUS-Dist-Slackware version 1.010
+CPANPLUS-Dist-Slackware version 1.011
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.  You can either install the created packages using the API
@@ -39,7 +39,7 @@ latest version with git using the command:
 
 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 Andreas Voegele
+Copyright (c) 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

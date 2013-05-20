@@ -14,7 +14,7 @@ use POSIX qw();
 use Text::Wrap qw($columns);
 use version 0.77 qw();
 
-our $VERSION = '1.010';
+our $VERSION = '1.011';
 
 sub new {
     my ( $class, %attrs ) = @_;
@@ -81,8 +81,7 @@ sub distname {
 sub build {
     my $self = shift;
 
-    # $ENV{BUILD} is ignored since packages may be built recursively.
-    return $self->{build} || 1;
+    return $self->{build} || $ENV{BUILD} || 1;
 }
 
 sub set_build {
@@ -478,7 +477,7 @@ package
 =head1 VERSION
 
 This documentation refers to C<CPANPLUS::Dist::Slackware::PackageDescription>
-version 1.010.
+version 1.011.
 
 =head1 SYNOPSIS
 
@@ -539,10 +538,7 @@ Returns the package name and version, e.g. "perl-Some-Module-0.01".
 
 =item B<< $pkgdesc->build >>
 
-Returns the package's build number.  Normally "1".
-
-As packages may be built recursively, C<CPANPLUS::Dist::Slackware>
-ignores C<$ENV{BUILD}>.
+Returns the package's build number.  Defaults to C<$ENV{BUILD}> or "1".
 
 =item B<< $pkgdesc->set_build >>
 
@@ -658,7 +654,7 @@ C<CPANPLUS::Dist::Slackware>
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
+Andreas Voegele  C<< <voegelas@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -667,7 +663,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 Andreas Voegele
+Copyright (c) 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

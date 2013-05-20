@@ -17,7 +17,7 @@ SUBCLASS
 my $builder = $class->new(
     module_name         => 'CPANPLUS::Dist::Slackware',
     license             => 'perl',
-    dist_author         => q{Andreas Voegele <VOEGELAS@cpan.org>},
+    dist_author         => q{Andreas Voegele <voegelas@cpan.org>},
     dist_version_from   => 'lib/CPANPLUS/Dist/Slackware.pm',
     build_requires => {
         'Module::Build' => 0.2808,

@@ -5,7 +5,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '1.010';
+our $VERSION = '1.011';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -52,7 +52,7 @@ necessary
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 1.010.
+C<CPANPLUS::Dist::Slackware::Plugin::YAML::LibYAML> version 1.011.
 
 =head1 SYNOPSIS
 
@@ -103,7 +103,7 @@ C<CPANPLUS::Dist::Slackware>
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <VOEGELAS@cpan.org> >>
+Andreas Voegele  C<< <voegelas@cpan.org> >>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -112,7 +112,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012 Andreas Voegele
+Copyright (c) 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
