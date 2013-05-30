@@ -257,7 +257,14 @@ sub _fake_install {
     elsif ( $installer_type eq 'CPANPLUS::Dist::Build' ) {
         my $perl     = $param_ref->{perl};
         my @run_perl = $dist->_run_perl;
-        $cmd = [ $perl, @run_perl, 'Build', 'install', "destdir=$destdir" ];
+        $cmd = [
+            $perl,           @run_perl,
+            'Build',         'install',
+            '--destdir',     $destdir,
+            '--installdirs', 'vendor',
+            '--config',      'installvendorman1dir=/usr/man/man1',
+            '--config',      'installvendorman3dir=/usr/man/man3'
+        ];
     }
     else {
         error( loc( q{Unknown type '%1'}, $installer_type ) );
