@@ -9,7 +9,7 @@ Revision history for CPANPLUS-Dist-Slackware
 - Support Module::Build::Tiny by passing command-line options to 'Build
   install'.
 - Respect the environment variable BUILD similar to the scripts from
-  SlackBuilds.org.  As package's may be built recursively setting the build
+  SlackBuilds.org.  As packages may be built recursively setting the build
   number is mainly useful when all packages are rebuilt after upgrading Perl.
 
 1.010  2012-08-23 03:12:31 CEST
