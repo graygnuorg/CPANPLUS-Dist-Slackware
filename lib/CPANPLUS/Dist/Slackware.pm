@@ -21,7 +21,7 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '1.011';
+our $VERSION = '1.012';
 
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
@@ -258,12 +258,8 @@ sub _fake_install {
         my $perl     = $param_ref->{perl};
         my @run_perl = $dist->_run_perl;
         $cmd = [
-            $perl,           @run_perl,
-            'Build',         'install',
-            '--destdir',     $destdir,
-            '--installdirs', 'vendor',
-            '--config',      'installvendorman1dir=/usr/man/man1',
-            '--config',      'installvendorman3dir=/usr/man/man3'
+            $perl, @run_perl, 'Build', 'install', '--destdir', $destdir,
+            split( ' ', $dist->_perl_mb_opt )
         ];
     }
     else {
@@ -958,7 +954,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.011.
+This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.012.
 
 =head1 SYNOPSIS
 

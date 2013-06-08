@@ -1,4 +1,4 @@
-CPANPLUS-Dist-Slackware version 1.011
+CPANPLUS-Dist-Slackware version 1.012
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.  You can either install the created packages using the API

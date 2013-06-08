@@ -5,7 +5,7 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '1.011';
+our $VERSION = '1.012';
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -199,7 +199,7 @@ documentation
 =head1 VERSION
 
 This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin> version 1.011.
+C<CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin> version 1.012.
 
 =head1 SYNOPSIS
 
