@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.013  2013-06-09 17:41:02 CEST
+
+- Remove Build.PL.
+
 1.012  2013-06-09 12:07:57 CEST
 
 - Use Dist::Zilla to build the distribution.
