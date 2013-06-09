@@ -21,8 +21,6 @@ use Params::Check qw();
 
 local $Params::Check::VERBOSE = 1;
 
-our $VERSION = '1.012';
-
 my $NONROOT_WARNING = <<'END_NONROOT_WARNING';
 In order to manage packages as a non-root user, which is highly recommended,
 you must have sudo and, optionally, fakeroot.
@@ -952,10 +950,6 @@ __END__
 
 CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
-=head1 VERSION
-
-This documentation refers to C<CPANPLUS::Dist::Slackware> version 1.012.
-
 =head1 SYNOPSIS
 
     ### from the cpanp interactive shell
@@ -973,7 +967,7 @@ format?
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.  You can either install the created packages using the API
-provided by CPANPLUS, or manually via C<installpkg>.
+provided by CPANPLUS or manually via C<installpkg>.
 
 =head2 Using C<CPANPLUS::Dist::Slackware>
 
@@ -1022,10 +1016,10 @@ build dependencies is supplied.
 =head2 Configuration files
 
 Few Perl distributions provide configuration files in F</etc> but if such a
-distribution is updated you have to check for new configuration files.  The
-package's F<README.SLACKWARE> file lists the configuration files.  Updated
-configuration files have got the filename extension ".new" and must be merged
-by the system administrator.
+distribution, e.g. C<Mail::SpamAssassin>, is updated you have to check for new
+configuration files.  The package's F<README.SLACKWARE> file lists the
+configuration files.  Updated configuration files have got the filename
+extension ".new" and must be merged by the system administrator.
 
 =head1 SUBROUTINES/METHODS
 
@@ -1284,7 +1278,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012, 2013 Andreas Voegele
+Copyright 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

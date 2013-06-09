@@ -1,7 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.012  2013-06-08 09:07:15 CEST
+1.012  2013-06-09 12:07:57 CEST
 
+- Use Dist::Zilla to build the distribution.
 - Call _perl_mb_opt() in _fake_install() instead of hardcoding path names.
 
 1.011  2013-05-30 10:56:48 CEST

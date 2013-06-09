@@ -5,8 +5,6 @@ use warnings;
 
 use File::Spec qw();
 
-our $VERSION = '1.012';
-
 sub available {
     my ( $plugin, $dist ) = @_;
     return ( $dist->parent->package_name eq 'Net-Pcap' );
@@ -40,13 +38,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::Net::Pcap - Patch C<Net::Pcap> if
-necessary
-
-=head1 VERSION
-
-This documentation refers to
-C<CPANPLUS::Dist::Slackware::Plugin::Net::Pcap> version 1.012.
+CPANPLUS::Dist::Slackware::Plugin::Net::Pcap - Patch C<Net::Pcap> if necessary
 
 =head1 SYNOPSIS
 
@@ -102,7 +94,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2012, 2013 Andreas Voegele
+Copyright 2012, 2013 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

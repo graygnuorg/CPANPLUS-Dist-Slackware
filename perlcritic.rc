@@ -15,6 +15,9 @@ minimum_regex_length_to_complain_about = 50
 # regexps with m{}x is fine.
 [-RegularExpressions::ProhibitComplexRegexes]
 
-# Accept regexps without /s and /m.  Regexps often aren't line-oriented.
+# Accept regexps without /s and /m.  Regexps sometimes aren't line-oriented.
 [-RegularExpressions::RequireDotMatchAnything]
 [-RegularExpressions::RequireLineBoundaryMatching]
+
+# Dist::Zilla::Plugin::PkgVersion inserts $VERSION before "use strict".
+[-TestingAndDebugging::RequireUseStrict]
