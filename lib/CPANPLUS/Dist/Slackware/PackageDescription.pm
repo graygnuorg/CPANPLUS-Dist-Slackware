@@ -235,7 +235,7 @@ sub summary {
     my $self   = shift;
     my $module = $self->module;
 
-    my $summary 
+    my $summary
         = $self->_summary_from_meta
         || $module->description
         || $self->_summary_from_pod
@@ -362,7 +362,7 @@ sub build_script {
     my $version = $module->package_version;
 
     # Quote single quotes.
-    $name    =~ s/('+)/'"$1"'/g;
+    $name =~ s/('+)/'"$1"'/g;
     $version =~ s/('+)/'"$1"'/g;
 
     return <<"END_SCRIPT";
@@ -378,16 +378,24 @@ sub _prereqs {
     my $module = $self->module;
     my $cb     = $module->parent;
 
+    my $perl_version = version->parse($PERL_VERSION);
     my %prereqs;
     my $prereq_ref = $module->status->prereqs;
     if ($prereq_ref) {
         for my $srcname ( keys %{$prereq_ref} ) {
             my $modobj = $cb->module_tree($srcname);
             next if !$modobj;
+
+            # Don't list core modules as prerequisites.
             next if $modobj->package_is_perl_core;
+
+            # Task::Weaken is only a build dependency.
             next if $modobj->package_name eq 'Task-Weaken';
+
+            # Omit modules that are distributed with Perl.
             my $version = $prereq_ref->{$srcname};
-            next if Module::CoreList->first_release( $srcname, $version );
+            my $r = Module::CoreList->first_release( $srcname, $version );
+            next if defined $r && version->parse($r) <= $perl_version;
 
             my $name = _normalize_name( $modobj->package_name );
             if ( !exists $prereqs{$name}

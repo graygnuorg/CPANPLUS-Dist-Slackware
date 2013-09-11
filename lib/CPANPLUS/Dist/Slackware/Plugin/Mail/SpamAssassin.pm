@@ -121,6 +121,7 @@ utilize.  Among the optional packages are:
 * perl-IP-Country
 * perl-Mail-SPF
 * perl-ldap
+* perl-libwww
 
 Downloading the SpamAssassin ruleset
 ------------------------------------

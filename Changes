@@ -1,5 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.014  2013-09-11 12:12:12 CEST
+
+- List prerequisites that are distributed with Perl in README.SLACKWARE if
+  the required version is higher than the supplied version.
+
 1.013  2013-06-09 17:41:02 CEST
 
 - Remove Build.PL.
