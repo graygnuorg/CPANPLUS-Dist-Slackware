@@ -1,5 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.015  2013-10-13 10:55:57 CEST
+
+- Remove CPANPLUS::Dist::Slackware::Plugin::Convert::BinHex.  As of
+  Convert::BinHex version 1.120 the test suite no longer fails.
+
 1.014  2013-09-11 12:12:12 CEST
 
 - List prerequisites that are distributed with Perl in README.SLACKWARE if
@@ -20,7 +25,8 @@ Revision history for CPANPLUS-Dist-Slackware
   install'.
 - Respect the environment variable BUILD similar to the scripts from
   SlackBuilds.org.  As packages may be built recursively setting the build
-  number is mainly useful when all packages are rebuilt after upgrading Perl.
+  number is mainly useful when all packages are rebuilt, e.g. after Perl has
+  been upgraded.
 
 1.010  2012-08-23 03:12:31 CEST
 
