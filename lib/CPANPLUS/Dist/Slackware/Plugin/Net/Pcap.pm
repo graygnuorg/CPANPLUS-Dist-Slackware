@@ -20,11 +20,14 @@ sub pre_prepare {
     return if !$wrksrc;
 
     # See L<https://rt.cpan.org/Ticket/Display.html?id=73335>.
+    my $offending_code = qr/
+        \$options{CCFLAGS} \s* = \s* ["']-Wall \s+ -Wwrite-strings["'] .*?;
+    /xms;
     my $filename = File::Spec->catfile( $wrksrc, 'Makefile.PL' );
     if ( -f $filename ) {
         my $code = $dist->_read_file($filename);
-        if ( $code =~ /\$options{CCFLAGS}/xms ) {
-            $code =~ s/^(\s+\$options{CCFLAGS})/#$1/xms;
+        if ( $code =~ $offending_code ) {
+            $code =~ s/$offending_code//;
             $cb->_move( file => $filename, to => "$filename.orig" ) or return;
             $dist->_write_file( $filename, $code ) or return;
         }
