@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware;
 use strict;
 use warnings;
 
-use base qw(CPANPLUS::Dist::Base);
+use parent qw(CPANPLUS::Dist::Base);
 
 use English qw( -no_match_vars );
 

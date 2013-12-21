@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.016  2013-12-21 19:22:16 CET
+
+- Use parent instead of base.
+
 1.015  2013-10-13 10:55:57 CEST
 
 - Fix CPANPLUS::Dist::Slackware::Plugin::Net::Pcap.

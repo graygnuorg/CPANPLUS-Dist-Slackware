@@ -157,7 +157,7 @@ sub docfiles {
         m{ ^(?:
                 AUTHORS
                 | BUGS
-                | Change(?:s|Log)
+                | Change(?:s|Log)(?:\.md)?
                 | COPYING(?:\.(?:LESSER|LIB))?
                 | CREDITS
                 | FAQ
