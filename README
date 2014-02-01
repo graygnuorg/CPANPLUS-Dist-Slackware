@@ -30,14 +30,14 @@ SUPPORT AND DOCUMENTATION
 Type "perldoc CPANPLUS::Dist::Slackware" after installation to see the module
 usage information.
 
-If you want to hack on the source it might be a good idea to grab the
-latest version with git using the command:
+If you want to hack on the source it might be a good idea to install
+Dist::Zilla and grab the latest version with git using the command:
 
     git clone git://github.com/voegelas/CPANPLUS-Dist-Slackware.git
 
 LICENSE AND COPYRIGHT
 
-Copyright 2012, 2013 Andreas Voegele
+Copyright 2012, 2013, 2014 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
