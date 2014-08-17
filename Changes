@@ -1,7 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.017  2014-08-17 11:25:00 CEST
+1.017  2014-08-17 14:47:09 CEST
 
+- The Makfile.PL of Crypt::SSLeay version 0.72 needs to be patched if the
+  module is built with CPANPLUS.
 - Update the list of modules that SpamAssassin can optionally utilize.
 - Add Dist::Zilla and Dist::Zilla::Test::Perl::Critic to dist.ini.
 
