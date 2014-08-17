@@ -10,7 +10,11 @@ sub available {
 
 sub pre_prepare {
     my ( $plugin, $dist ) = @_;
-    $ENV{AWX_URL} = 'http://prdownloads.sourceforge.net/wxwindows';
+
+    if ( !exists $ENV{AWX_URL} && !exists $ENV{WX_CONFIG} ) {
+        $ENV{AWX_URL} = 'http://prdownloads.sourceforge.net/wxwindows';
+    }
+
     return 1;
 }
 
@@ -35,8 +39,17 @@ CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets - Configure Alien::wxWidgets
 
 =head1 DESCRIPTION
 
-Make sure that Alien::wxWidgets does not check for wxWidgets installations
-that were compiled using Alien::wxWidgets.
+Configures Alien::wxWidgets to download and build its own version of the
+wxWidgets library unless C<$ENV{WX_CONFIG}> is set to the full path to
+F<wx-config>.
+
+We default to a custom-built wxWidgets library as Wx currently cannot be built
+with the library provided by the wxGTK and wxGTK3 SlackBuild scripts.
+
+If wxPython is installed you can set C<$ENV{WX_CONFIG}> to
+F</usr/bin/wx-config> and use the wxWidgets library provided by wxPython.  In
+that case you will have to rebuild Alien::wxWidgets and Wx whenever wxPython
+is updated.
 
 =head1 SUBROUTINES/METHODS
 
@@ -48,8 +61,10 @@ Returns true if this plugin applies to the given Perl distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Sets C<$ENV{AWX_URL}>, which causes Alien::wxWidgets to ignore wxWidgets
-installations that were compiled using Alien::wxWidgets.
+If neither C<$ENV{AWX_URL}> nor C<$ENV{WX_CONFIG}> are set, sets
+C<$ENV{AWX_URL}> to C<http://prdownloads.sourceforge.net/wxwindows>, which
+causes Alien::wxWidgets to ignore existing wxWidgets installations and build
+its own library.
 
 =item B<< $plugin->post_prepare($dist) >>
 
@@ -88,7 +103,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012, 2013 Andreas Voegele
+Copyright 2012, 2013, 2014 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
