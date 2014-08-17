@@ -24,7 +24,9 @@ sub pre_prepare {
     if ( -f $filename ) {
         my $code = $dist->_read_file($filename);
         if ( $code =~ /compare\(test10\('frog\.jpg'\),10\);/xms ) {
-            $code =~ s/compare\(test10\('frog\.jpg'\),10\);/print "ok ",10," # Skip, disabled\\n";/xms;
+            $code =~ s{
+                compare\(test10\('frog\.jpg'\),10\);
+            }{print "ok ",10," # Skip, disabled\\n";}xms;
             $cb->_move( file => $filename, to => "$filename.orig" ) or return;
             $dist->_write_file( $filename, $code ) or return;
         }
