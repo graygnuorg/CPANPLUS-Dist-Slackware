@@ -7,7 +7,16 @@ use File::Spec qw();
 
 sub available {
     my ( $plugin, $dist ) = @_;
-    return ( $dist->parent->package_name eq 'GD' );
+
+    my $module = $dist->parent;
+
+    if ( $module->package_name eq 'GD' ) {
+        if ( $module->package_version =~ /^2\.5[56]$/ ) {
+            $module->status->installer_type('CPANPLUS::Dist::Build');
+        }
+        return 1;
+    }
+    return 0;
 }
 
 sub pre_prepare {
@@ -19,16 +28,27 @@ sub pre_prepare {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    # See L<https://rt.cpan.org/Ticket/Display.html?id=49053>.
-    my $filename = File::Spec->catfile( $wrksrc, 't', 'GD.t' );
-    if ( -f $filename ) {
-        my $code = $dist->_read_file($filename);
-        if ( $code =~ /compare\(test10\('frog\.jpg'\),10\);/xms ) {
+    # Only install the bdf2gdfont.pl script.
+    my $build_pl = File::Spec->catfile( $wrksrc, 'Build.PL' );
+    if ( -f $build_pl ) {
+        my $code = $dist->_read_file($build_pl);
+        if ( $code =~ /script_files \s+ => \s+ 'bdf_scripts'/xms ) {
             $code =~ s{
-                compare\(test10\('frog\.jpg'\),10\);
-            }{print "ok ",10," # Skip, disabled\\n";}xms;
-            $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-            $dist->_write_file( $filename, $code ) or return;
+                (script_files \s+ => \s+) 'bdf_scripts'
+            }{$1 'bdf_scripts/bdf2gdfont.pl'}xms;
+            $cb->_move( file => $build_pl, to => "$build_pl.orig" ) or return;
+            $dist->_write_file( $build_pl, $code ) or return;
+        }
+    }
+
+    # Force the test suite to recreate the test image files.
+    my $gd_t = File::Spec->catfile( $wrksrc, 't', 'GD.t' );
+    if ( -f $gd_t ) {
+        my $code = $dist->_read_file($gd_t);
+        if ( $code =~ /if \(defined \$arg && \$arg eq '--write'\)/ ) {
+            $code =~ s{if \(defined \$arg && \$arg eq '--write'\)}{if (1)};
+            $cb->_move( file => $gd_t, to => "$gd_t.orig" ) or return;
+            $dist->_write_file( $gd_t, $code ) or return;
         }
     }
 
@@ -49,8 +69,9 @@ CPANPLUS::Dist::Slackware::Plugin::GD - Patch C<GD>
 
 =head1 DESCRIPTION
 
-Disable the infamous test 10.  See bug #49053 at L<http://rt.cpan.org/> for
-details.
+Prefer Build.PL over the broken Makefile.PL when building GD 2.55 or 2.56.
+Only install the bdf2gdfont.pl script in /usr/bin.  Force the test suite to
+recreate the test image files as the tests are prone to fail.
 
 =head1 SUBROUTINES/METHODS
 

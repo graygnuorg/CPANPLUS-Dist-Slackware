@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.018  2014-12-05 18:03:07 CET
+
+- Adapt the GD plugin to GD 2.56.
+
 1.017  2014-08-17 21:03:26 CEST
 
 - Disable GD's test 10.
