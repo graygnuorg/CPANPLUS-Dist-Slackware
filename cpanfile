@@ -1,4 +1,4 @@
-requires 'perl', '5.010';
+requires 'perl', '5.012';
 
 requires 'CPANPLUS';
 requires 'Cwd';
@@ -17,9 +17,3 @@ requires 'Pod::Simple';
 requires 'POSIX';
 requires 'Text::Wrap';
 requires 'version', '0.77';
-
-on 'develop' => sub {
-    requires 'Dist::Zilla';
-    requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
-    requires 'Dist::Zilla::Test::Perl::Critic';
-};

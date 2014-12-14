@@ -3,6 +3,8 @@ package CPANPLUS::Dist::Slackware;
 use strict;
 use warnings;
 
+our $VERSION = '1.019';
+
 use parent qw(CPANPLUS::Dist::Base);
 
 use English qw( -no_match_vars );
@@ -84,16 +86,6 @@ sub prepare {
         local $ENV{PERL_MM_OPT}   = $dist->_perl_mm_opt;
         local $ENV{PERL_MB_OPT}   = $dist->_perl_mb_opt;
         local $ENV{MODULEBUILDRC} = 'NONE';
-
-        # Unfortunately, the Module::Build version shipped with Slackware
-        # Linux 13.1 and below does not support PERL_MB_OPT.  To keep things
-        # simple, the "buildflags" option is set if an old Perl interpreter is
-        # installed.
-        if ( $PERL_VERSION lt v5.12.0 ) {
-            my %hash = @params;
-            $hash{buildflags} = $ENV{PERL_MB_OPT};
-            @params = %hash;
-        }
 
         # We are not allowed to write to XML/SAX/ParserDetails.ini.
         local $ENV{SKIP_SAX_INSTALL} = 1;
@@ -487,7 +479,8 @@ sub _verify_filename {
             /etc/
             | /usr/$
             | /usr/(?:bin|doc|man)/
-            | /usr/(?:lib(?:64)?|share)/(?:perl5/|$)
+            | /usr/(?:lib(?:64)?|share)/$
+            | /usr/(?:lib(?:64)?|share)/perl5/
         )
     }xms;
 
@@ -950,6 +943,10 @@ __END__
 
 CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
+=head1 VERSION
+
+This document describes CPANPLUS::Dist::Slackware version 1.019.
+
 =head1 SYNOPSIS
 
     ### from the cpanp interactive shell
@@ -969,7 +966,7 @@ This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.  You can either install the created packages using the API
 provided by CPANPLUS or manually via C<installpkg>.
 
-=head2 Using C<CPANPLUS::Dist::Slackware>
+=head2 Using CPANPLUS::Dist::Slackware
 
 Start an interactive shell to edit the CPANPLUS settings:
 
@@ -980,7 +977,7 @@ Once CPANPLUS is configured, modules can be installed.  Example:
 
     CPAN Terminal> i Smart::Comments --format=CPANPLUS::Dist::Slackware
 
-You can make C<CPANPLUS::Dist::Slackware> your default format by setting the
+You can make CPANPLUS::Dist::Slackware your default format by setting the
 C<dist_type> key:
 
     CPAN Terminal> s conf dist_type CPANPLUS::Dist::Slackware
@@ -1016,7 +1013,7 @@ build dependencies is supplied.
 =head2 Configuration files
 
 Few Perl distributions provide configuration files in F</etc> but if such a
-distribution, e.g. C<Mail::SpamAssassin>, is updated you have to check for new
+distribution, e.g. Mail::SpamAssassin, is updated you have to check for new
 configuration files.  The package's F<README.SLACKWARE> file lists the
 configuration files.  Updated configuration files have got the filename
 extension ".new" and must be merged by the system administrator.
@@ -1034,12 +1031,12 @@ management tools are available.
 
 =item B<< $dist->init >>
 
-Sets up the C<CPANPLUS::Dist::Slackware> object for use.  Creates all the
+Sets up the CPANPLUS::Dist::Slackware object for use.  Creates all the
 needed status accessors.
 
     $success = $dist->init();
 
-Called automatically whenever a new C<CPANPLUS::Dist> object is created.
+Called automatically whenever a new CPANPLUS::Dist object is created.
 
 =item B<< $dist->prepare(%params) >>
 
@@ -1100,7 +1097,7 @@ Returns true on success and false on failure.
 =head1 PLUGINS
 
 You can write plugins to patch or customize Perl distributions.  Put your
-plugins into the C<CPANPLUS::Dist::Slackware::Plugin> namespace.  Plugins can
+plugins into the CPANPLUS::Dist::Slackware::Plugin namespace.  Plugins can
 provide the following methods.
 
 =over 4
@@ -1151,7 +1148,7 @@ F</var> and F</opt>.
 
 =item B<< Could not chdir into DIR >>
 
-C<CPANPLUS::Dist::Slackware> could not change its current directory while
+CPANPLUS::Dist::Slackware could not change its current directory while
 building the package.
 
 =item B<< Could not create directory DIR >>
@@ -1191,15 +1188,15 @@ CPANPLUS.
 
 =item B<< Unknown type 'CPANPLUS::Dist::WHATEVER' >>
 
-C<CPANPLUS::Dist::Slackware> supports C<CPANPLUS::Dist::MM> and
-C<CPANPLUS::Dist::Build>.
+CPANPLUS::Dist::Slackware supports CPANPLUS::Dist::MM and
+CPANPLUS::Dist::Build.
 
 =back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
 Similar to the build scripts provided by L<http://slackbuilds.org/>,
-C<CPANPLUS::Dist::Slackware> respects the following environment variables:
+CPANPLUS::Dist::Slackware respects the following environment variables:
 
 =over 4
 
@@ -1249,23 +1246,23 @@ In order to manage packages as a non-root user, which is highly recommended,
 you must have C<sudo> and, optionally, C<fakeroot>.  You can download a script
 that builds C<fakeroot> from L<http://slackbuilds.org/>.
 
-C<CPANPLUS::Dist::Slackware> requires the modules C<CPANPLUS>, C<Cwd>,
-C<File::Find>, C<File::Spec>, C<IO::Compress::Gzip>, C<IPC:Cmd>,
-C<Locale::Maketext::Simple>, and C<Params::Check>.
+CPANPLUS::Dist::Slackware requires the modules CPANPLUS, Cwd, File::Find,
+File::Spec, IO::Compress::Gzip, IPC:Cmd, Locale::Maketext::Simple, and
+Params::Check.
 
 =head1 INCOMPATIBILITIES
 
-Packages created with C<CPANPLUS::Dist::Slackware> may conflict with packages
+Packages created with CPANPLUS::Dist::Slackware may conflict with packages
 from L<http://slackbuilds.org/> and packages created with C<cpan2tgz>.
 
 =head1 SEE ALSO
 
-cpanp(1), cpan2dist(1), sudo(8), fakeroot(1), C<CPANPLUS::Dist::MM>,
-C<CPANPLUS::Dist::Build>, C<CPANPLUS::Dist::Base>
+cpanp(1), cpan2dist(1), sudo(8), fakeroot(1), CPANPLUS::Dist::MM,
+CPANPLUS::Dist::Build, CPANPLUS::Dist::Base
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <voegelas@cpan.org> >>
+Andreas Voegele E<lt>voegelas@cpan.orgE<gt>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -1278,7 +1275,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012, 2013 Andreas Voegele
+Copyright 2012-2014 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

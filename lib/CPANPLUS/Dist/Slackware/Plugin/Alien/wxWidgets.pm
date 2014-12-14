@@ -3,6 +3,8 @@ package CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets;
 use strict;
 use warnings;
 
+our $VERSION = '1.019';
+
 sub available {
     my ( $plugin, $dist ) = @_;
     return ( $dist->parent->package_name eq 'Alien-wxWidgets' );
@@ -30,6 +32,10 @@ __END__
 =head1 NAME
 
 CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets - Configure Alien::wxWidgets
+
+=head1 VERSION
+
+This document describes CPANPLUS::Dist::Slackware::Plugin::Alien::wxWidgets version 1.019.
 
 =head1 SYNOPSIS
 
@@ -90,11 +96,11 @@ None known.
 
 =head1 SEE ALSO
 
-C<CPANPLUS::Dist::Slackware>
+CPANPLUS::Dist::Slackware
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <voegelas@cpan.org> >>
+Andreas Voegele E<lt>voegelas@cpan.orgE<gt>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -103,7 +109,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012, 2013, 2014 Andreas Voegele
+Copyright 2012-2014 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

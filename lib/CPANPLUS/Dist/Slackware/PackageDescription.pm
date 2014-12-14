@@ -3,6 +3,8 @@ package CPANPLUS::Dist::Slackware::PackageDescription;
 use strict;
 use warnings;
 
+our $VERSION = '1.019';
+
 use English qw( -no_match_vars );
 
 use File::Spec qw();
@@ -479,6 +481,10 @@ __END__
 
 CPANPLUS::Dist::Slackware::PackageDescription - Collect information on a package
 
+=head1 VERSION
+
+This document describes CPANPLUS::Dist::Slackware::PackageDescription version 1.019.
+
 =head1 SYNOPSIS
 
     use CPANPLUS::Dist::Slackware::PackageDescription;
@@ -497,7 +503,7 @@ CPANPLUS::Dist::Slackware::PackageDescription - Collect information on a package
 =head1 DESCRIPTION
 
 This module gets information on a yet-to-be-created Slackware compatible
-package.  The information is obtained from a C<CPANPLUS::Module> object, the
+package.  The information is obtained from a CPANPLUS::Module object, the
 file system and the environment.  Among other things, the module translates a
 Perl distribution's name and version into a package name.  It tries to find a
 short summary that describes the distribution.  It can build a F<slack_desc>
@@ -517,12 +523,12 @@ Returns a newly constructed object.
         %attrs
     );
 
-The C<CPANPLUS::Module> object is mandatory.  All other attributes are
+The CPANPLUS::Module object is mandatory.  All other attributes are
 optional.
 
 =item B<< $pkgdesc->module >>
 
-Returns the C<CPANPLUS::Module> object that was passed to the constructor.
+Returns the CPANPLUS::Module object that was passed to the constructor.
 
 =item B<< $pkgdesc->normalized_name >>
 
@@ -635,14 +641,13 @@ None.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-See above and C<CPANPLUS::Dist::Slackware> for supported environment
-variables.
+See above and CPANPLUS::Dist::Slackware for supported environment variables.
 
 =head1 DEPENDENCIES
 
-Requires the modules C<File::Spec>, C<File::Temp>, C<Pod::Find>,
-C<Pod::Simple>, C<POSIX>, C<Text::Wrap>, and C<version> 0.77.  If available,
-the module C<Parse::CPAN::Meta> is used.
+Requires the modules File::Spec, File::Temp, Pod::Find, Pod::Simple, POSIX,
+Text::Wrap, and version 0.77.  If available, the module Parse::CPAN::Meta is
+used.
 
 =head1 INCOMPATIBILITIES
 
@@ -650,11 +655,11 @@ None known.
 
 =head1 SEE ALSO
 
-C<CPANPLUS::Dist::Slackware>
+CPANPLUS::Dist::Slackware
 
 =head1 AUTHOR
 
-Andreas Voegele  C<< <voegelas@cpan.org> >>
+Andreas Voegele E<lt>voegelas@cpan.orgE<gt>
 
 =head1 BUGS AND LIMITATIONS
 
@@ -663,7 +668,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012, 2013 Andreas Voegele
+Copyright 2012-2014 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

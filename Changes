@@ -1,7 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.019  2014-12-14 07:27:49 CET 2014
+{{$NEXT}}
 
+- Depend on Perl 5.12.
+- Build the distribution with Dist::Milla.
 - Add cpanfile.
 
 1.018  2014-12-05 18:03:07 CET
