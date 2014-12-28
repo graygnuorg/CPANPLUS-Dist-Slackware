@@ -17,3 +17,7 @@ requires 'Pod::Simple';
 requires 'POSIX';
 requires 'Text::Wrap';
 requires 'version', '0.77';
+
+on 'test' => sub {
+    requires 'Test::More', '0.96';
+};

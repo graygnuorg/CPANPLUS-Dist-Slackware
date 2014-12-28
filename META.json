@@ -4,7 +4,7 @@
       "Andreas Voegele <voegelas@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.028, Dist::Milla version v1.0.9, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Dist::Zilla version 5.029, Dist::Milla version v1.0.9, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -57,6 +57,11 @@
             "parent" : "0",
             "perl" : "5.012",
             "version" : "0.77"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.96"
          }
       }
    },
