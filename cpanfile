@@ -2,6 +2,7 @@ requires 'perl', '5.012';
 
 requires 'CPANPLUS';
 requires 'Cwd';
+requires 'ExtUtils::Install';
 requires 'File::Find';
 requires 'File::Spec';
 requires 'File::Temp';

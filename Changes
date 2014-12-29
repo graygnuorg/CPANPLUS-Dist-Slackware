@@ -2,6 +2,7 @@ Revision history for CPANPLUS-Dist-Slackware
 
 {{$NEXT}}
 
+- Keep the .packlist files.
 - Depend on Perl 5.12.
 - Build the distribution with Dist::Milla.
 - Add cpanfile.

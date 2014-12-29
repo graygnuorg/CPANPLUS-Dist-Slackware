@@ -13,6 +13,7 @@ use CPANPLUS::Dist::Slackware::PackageDescription;
 use CPANPLUS::Error;
 
 use Cwd qw();
+use ExtUtils::Packlist;
 use File::Find qw();
 use File::Spec qw();
 use IO::Compress::Gzip qw($GzipError);
@@ -502,6 +503,55 @@ sub _verify_filename {
     return 1;
 }
 
+sub _process_packlist {
+    my ( $dist, $filename ) = @_;
+
+    my $status  = $dist->status;
+    my $pkgdesc = $status->_pkgdesc;
+
+    my $destdir = $pkgdesc->destdir;
+
+    my ($old_pl) = ExtUtils::Packlist->new($filename);
+    my @keys = grep {m{^\Q$destdir\E}xms} keys %{$old_pl};
+    if ( !@keys ) {
+        @keys = keys %{$old_pl};
+    }
+    if (@keys) {
+        my ($new_pl) = ExtUtils::Packlist->new();
+        for my $key (@keys) {
+            my $value = $old_pl->{$key};
+            $key =~ s{^\Q$destdir\E}{}xms;
+
+            # Add .gz to manual pages.
+            if ( $key =~ m{^/usr/man/}xms ) {
+                if ( $key !~ m{\.gz$}xms ) {
+                    $key .= '.gz';
+                }
+                if ( ref $value eq 'HASH' ) {
+                    if (   defined $value->{type}
+                        && $value->{type} eq 'link'
+                        && defined $value->{from} )
+                    {
+                        my $from = $value->{from};
+                        if ( $from =~ m{^/usr/man/}xms ) {
+                            if ( $from !~ m{\.gz$}xms ) {
+                                $from .= '.gz';
+                                $value->{from} = $from;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ( -e "$destdir$key" ) {
+                $new_pl->{$key} = $value;
+            }
+        }
+        $new_pl->write($filename);
+    }
+    return 1;
+}
+
 sub _process_installed_files {
     my ( $dist, $param_ref ) = @_;
 
@@ -517,7 +567,8 @@ sub _process_installed_files {
         return;
     }
 
-    my $fail   = 0;
+    my $fail = 0;
+    my @packlists;
     my $wanted = sub {
         my $filename = $_;
 
@@ -551,13 +602,15 @@ sub _process_installed_files {
             rmdir $filename;
         }
         elsif ( -f $filename ) {
-            if (   $filename eq 'perllocal.pod'
-                || $filename eq '.packlist'
+            if ( $filename eq 'perllocal.pod'
                 || ( $filename =~ /\.bs$/ && -z $filename ) )
             {
                 if ( !$dist->_unlink($filename) ) {
                     ++$fail;
                 }
+            }
+            elsif ( $filename eq '.packlist' ) {
+                push @packlists, $File::Find::name;
             }
             else {
                 my $type = $dist->_filetype($filename);
@@ -570,6 +623,12 @@ sub _process_installed_files {
         }
     };
     File::Find::finddepth( $wanted, q{.} );
+
+    for my $packlist (@packlists) {
+        if ( !$dist->_process_packlist($packlist) ) {
+            ++$fail;
+        }
+    }
 
     if ( !$cb->_chdir( dir => $orig_dir ) ) {
         ++$fail;

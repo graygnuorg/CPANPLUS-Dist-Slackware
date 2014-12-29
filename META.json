@@ -41,6 +41,7 @@
          "requires" : {
             "CPANPLUS" : "0",
             "Cwd" : "0",
+            "ExtUtils::Install" : "0",
             "File::Find" : "0",
             "File::Spec" : "0",
             "File::Temp" : "0",
