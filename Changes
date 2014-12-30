@@ -1,6 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-{{$NEXT}}
+1.020  2014-12-30 08:31:51 CET
+
+  - Revert to Dist::Zilla.
 
 1.019  2014-12-30 08:31:51 CET
 

@@ -22,3 +22,10 @@ requires 'version', '0.77';
 on 'test' => sub {
     requires 'Test::More', '0.96';
 };
+
+on 'develop' => sub {
+    requires 'Dist::Zilla';
+    requires 'Dist::Zilla::Plugin::CopyFilesFromBuild';
+    requires 'Dist::Zilla::Plugin::LicenseFromModule';
+    requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
+};
