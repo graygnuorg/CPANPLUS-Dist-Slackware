@@ -2,6 +2,8 @@ Revision history for CPANPLUS-Dist-Slackware
 
 {{$NEXT}}
 
+1.019  2014-12-30 08:31:51 CET
+
   - Avoid a warning in Module::CoreList.
   - Keep the .packlist files.
   - Depend on Perl 5.12.
