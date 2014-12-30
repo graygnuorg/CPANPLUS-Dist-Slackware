@@ -396,8 +396,13 @@ sub _prereqs {
 
             # Omit modules that are distributed with Perl.
             my $version = $prereq_ref->{$srcname};
-            my $r = Module::CoreList->first_release( $srcname, $version );
-            next if defined $r && version->parse($r) <= $perl_version;
+            {
+                ## cpan2dist is run with -w, which triggers a warning in
+                ## Module::CoreList.
+                local ($WARNING) = 0;
+                my $r = Module::CoreList->first_release( $srcname, $version );
+                next if defined $r && version->parse($r) <= $perl_version;
+            }
 
             my $name = _normalize_name( $modobj->package_name );
             if ( !exists $prereqs{$name}
