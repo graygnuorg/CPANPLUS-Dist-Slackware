@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware;
 use strict;
 use warnings;
 
-our $VERSION = '1.020';
+our $VERSION = '1.021';
 
 use parent qw(CPANPLUS::Dist::Base);
 
@@ -1004,7 +1004,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware version 1.020.
+This document describes CPANPLUS::Dist::Slackware version 1.021.
 
 =head1 SYNOPSIS
 
@@ -1334,7 +1334,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012-2014 Andreas Voegele
+Copyright 2012-2015 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
