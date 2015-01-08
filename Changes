@@ -1,8 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.021  2015-01-01 10:03:46 CET
+1.021  2015-01-07 07:53:19 CET
 
-  - XXX
+  - Check whether a dependency is still distributed with Perl.
+  - Depend on Perl 5.12.3.
 
 1.020  2014-12-30 08:31:51 CET
 

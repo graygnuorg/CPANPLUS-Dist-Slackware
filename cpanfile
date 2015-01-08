@@ -1,4 +1,4 @@
-requires 'perl', '5.012';
+requires 'perl', '5.012003';
 
 requires 'CPANPLUS';
 requires 'Cwd';
@@ -9,7 +9,7 @@ requires 'File::Temp';
 requires 'IO::Compress::Gzip';
 requires 'IPC::Cmd';
 requires 'Locale::Maketext::Simple';
-requires 'Module::CoreList';
+requires 'Module::CoreList', '2.32';
 requires 'Module::Pluggable';
 requires 'Params::Check';
 requires 'parent';

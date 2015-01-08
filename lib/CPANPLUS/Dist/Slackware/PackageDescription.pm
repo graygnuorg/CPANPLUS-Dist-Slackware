@@ -396,10 +396,11 @@ sub _prereqs {
 
             # Omit modules that are distributed with Perl.
             my $version = $prereq_ref->{$srcname};
-            {
+            my $s       = Module::CoreList->removed_from($srcname);
+            if ( !defined $s || $perl_version < version->parse($s) ) {
                 ## cpan2dist is run with -w, which triggers a warning in
                 ## Module::CoreList.
-                local ($WARNING) = 0;
+                local $WARNING = 0;
                 my $r = Module::CoreList->first_release( $srcname, $version );
                 next if defined $r && version->parse($r) <= $perl_version;
             }
