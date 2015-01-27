@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Net::Pcap;
 use strict;
 use warnings;
 
-our $VERSION = '1.021';
+our $VERSION = '1.022';
 
 use File::Spec qw();
 
@@ -47,7 +47,7 @@ CPANPLUS::Dist::Slackware::Plugin::Net::Pcap - Patch Net::Pcap if necessary
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Plugin::Net::Pcap version 1.021.
+This document describes CPANPLUS::Dist::Slackware::Plugin::Net::Pcap version 1.022.
 
 =head1 SYNOPSIS
 

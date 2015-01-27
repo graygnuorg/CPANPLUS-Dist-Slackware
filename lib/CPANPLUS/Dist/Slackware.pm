@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware;
 use strict;
 use warnings;
 
-our $VERSION = '1.021';
+our $VERSION = '1.022';
 
 use parent qw(CPANPLUS::Dist::Base);
 
@@ -1004,7 +1004,7 @@ CPANPLUS::Dist::Slackware - Install Perl distributions on Slackware Linux
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware version 1.021.
+This document describes CPANPLUS::Dist::Slackware version 1.022.
 
 =head1 SYNOPSIS
 
