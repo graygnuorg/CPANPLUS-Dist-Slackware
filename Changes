@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.023  2015-08-18 09:12:53 CEST
+
+  - XXX
+
 1.022  2015-08-18 08:41:04 CEST
 
   - Escape a left brace in a regex to get rid of a deprecation warning.
