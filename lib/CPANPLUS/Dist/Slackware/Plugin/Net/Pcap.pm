@@ -23,7 +23,7 @@ sub pre_prepare {
 
     # See L<https://rt.cpan.org/Ticket/Display.html?id=73335>.
     my $offending_code = qr/
-        \$options{CCFLAGS} \s* = \s* ["']-Wall \s+ -Wwrite-strings["'] .*?;
+        \$options[{]CCFLAGS[}] \s* = \s* ["']-Wall \s+ -Wwrite-strings["'] .*?;
     /xms;
     my $filename = File::Spec->catfile( $wrksrc, 'Makefile.PL' );
     if ( -f $filename ) {
