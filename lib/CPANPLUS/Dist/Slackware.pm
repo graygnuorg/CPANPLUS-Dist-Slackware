@@ -1023,7 +1023,7 @@ format?
 
 This CPANPLUS plugin creates Slackware compatible packages from Perl
 distributions.  You can either install the created packages using the API
-provided by CPANPLUS or manually via C<installpkg>.
+provided by CPANPLUS or manually with C<installpkg>.
 
 =head2 Using CPANPLUS::Dist::Slackware
 
@@ -1041,8 +1041,8 @@ C<dist_type> key:
 
     CPAN Terminal> s conf dist_type CPANPLUS::Dist::Slackware
 
-CPANPLUS sometimes fails to show interactive prompts if the C<verbose> option
-is not set.  Thus you might want to enable verbose output:
+Some Perl distributions fail to show interactive prompts if the C<verbose>
+option is not set.  Thus you might want to enable verbose output:
 
     CPAN Terminal> s conf verbose 1
 
@@ -1055,7 +1055,7 @@ User settings are stored in F<$HOME/.cpanplus/lib/CPANPLUS/Config/User.pm>.
 Packages may also be created from the command-line.  Example:
 
     $ cpan2dist --format CPANPLUS::Dist::Slackware Smart::Comments
-    $ sudo /sbin/installpkg /tmp/perl-Smart-Comments-1.0.4-i486-1_CPANPLUS.tgz
+    $ sudo /sbin/installpkg /tmp/perl-Smart-Comments-1.06-x86_64-1_CPANPLUS.tgz
 
 =head2 Managing packages as a non-root user
 
