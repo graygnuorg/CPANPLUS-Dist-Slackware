@@ -1242,8 +1242,8 @@ An external command failed to execute.
 
 =item B<< No dir found to operate on! >>
 
-For some reason, the Perl distribution's archive has not been extracted by
-CPANPLUS.
+For some reason, CPANPLUS could not extract the Perl distribution's archive
+file.
 
 =item B<< Unknown type 'CPANPLUS::Dist::WHATEVER' >>
 
@@ -1311,8 +1311,9 @@ Params::Check.
 
 =head1 INCOMPATIBILITIES
 
-Packages created with CPANPLUS::Dist::Slackware may conflict with packages
-from L<http://slackbuilds.org/> and packages created with C<cpan2tgz>.
+Packages created with CPANPLUS::Dist::Slackware may provide the same files as
+packages built with scripts from L<http://slackbuilds.org/> and packages created
+with C<cpan2tgz>.
 
 =head1 SEE ALSO
 
@@ -1325,9 +1326,9 @@ Andreas Voegele E<lt>voegelas@cpan.orgE<gt>
 
 =head1 BUGS AND LIMITATIONS
 
-CPANPLUS sometimes fails to show interactive prompts if the C<verbose> option
-is not set.  This has been reported as bug #47818 and bug
-#72095 at L<http://rt.cpan.org/>.
+Some Perl distributions fail to show interactive prompts if the C<verbose> option
+is not set.  This problem has been reported as bug #47818 and bug #72095 at
+L<http://rt.cpan.org/>.
 
 Please report any bugs to C<bug-cpanplus-dist-slackware at rt.cpan.org>, or
 through the web interface at L<http://rt.cpan.org/>.
