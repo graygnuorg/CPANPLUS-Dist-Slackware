@@ -3,6 +3,8 @@ Revision history for CPANPLUS-Dist-Slackware
 1.023  2015-08-18 09:12:53 CEST
 
   - XXX
+  - Add a Search::Xapian plugin that fixes the distributions's Makefile.PL
+    script.
 
 1.022  2015-08-18 08:41:04 CEST
 
@@ -15,7 +17,7 @@ Revision history for CPANPLUS-Dist-Slackware
   - Check whether a dependency is still distributed with Perl.
   - Depend on Perl 5.12.3.
 
-1.020  2014-12-30 08:31:51 CET
+1.020  2014-12-30 13:26:13 CET
 
   - Revert to Dist::Zilla.
 
@@ -25,7 +27,7 @@ Revision history for CPANPLUS-Dist-Slackware
   - Keep the .packlist files.
   - Depend on Perl 5.12.
   - Build the distribution with Dist::Milla.
-  - Add cpanfile.
+  - Add a cpanfile.
 
 1.018  2014-12-05 18:03:07 CET
 
@@ -33,10 +35,10 @@ Revision history for CPANPLUS-Dist-Slackware
 
 1.017  2014-08-17 21:03:26 CEST
 
-  - Add GD plugin, which fixes the module's tests.
+  - Add a GD plugin, which patches the module's tests.
   - Make Alien::wxWidgets use the system's wxWidgets library if the environment
     variable WX_CONFIG is set to the full path to wx-config.
-  - Patch Crypt::SSLeay's Makefile.PL if necessary.
+  - Patch the Crypt::SSLeay distribution's Makefile.PL if necessary.
   - Remove the Padre plugin as the development seems to have stopped.
   - Update the list of modules that SpamAssassin can optionally utilize.
   - Add Dist::Zilla and Dist::Zilla::Test::Perl::Critic to dist.ini.
@@ -47,8 +49,8 @@ Revision history for CPANPLUS-Dist-Slackware
 
 1.015  2013-10-13 10:55:57 CEST
 
-  - Fix CPANPLUS::Dist::Slackware::Plugin::Net::Pcap.
-  - Remove CPANPLUS::Dist::Slackware::Plugin::Convert::BinHex.
+  - Update the Net::Pcap plugin.
+  - The Convert::BinHex plugin is no longer needed.
 
 1.014  2013-09-11 12:12:12 CEST
 
@@ -62,7 +64,7 @@ Revision history for CPANPLUS-Dist-Slackware
 1.012  2013-06-09 12:07:57 CEST
 
   - Use Dist::Zilla to build the distribution.
-  - Call _perl_mb_opt() in _fake_install() instead of hardcoding path names.
+  - Use _perl_mb_opt() in _fake_install() instead of hardcoded path names.
 
 1.011  2013-05-30 10:56:48 CEST
 
@@ -78,22 +80,22 @@ Revision history for CPANPLUS-Dist-Slackware
   - The Padre plugin creates a doinst.sh file that runs update-desktop-database
     and gtk-update-icon-cache.
   - The YAML::Syck plugin is no longer needed.
-  - Use CPAN mail address as contact address.
+  - Use the CPAN mail address as the contact address.
 
 1.00  2012-02-13 09:48:12 CET
 
   - List required packages instead of module names in README.SLACKWARE.
-  - Update the YAML::LibYAML plugin.  Add YAML::Syck plugin.  Fix errors that
+  - Update the YAML::LibYAML plugin.  Add a YAML::Syck plugin.  Fix errors that
     occur when these modules are built with the GCC compiler flag
     "-Werror=format-security".
-  - Add Convert::BinHex plugin, which fixes a bug in the module's test suite.
-  - Add Net::Pcap plugin, which fixes the module's Makefile.PL.
+  - Add a Convert::BinHex plugin, which fixes a bug in the module's test suite.
+  - Add a Net::Pcap plugin, which fixes the module's Makefile.PL.
 
 0.05  2012-02-01 19:31:33 CET
 
   - Document the plugin interface.
-  - Add Padre plugin, which installs a desktop entry and an icon for Padre.
-  - Add Mail::SpamAssassin plugin, which installs an init script and additional
+  - Add a Padre plugin, which installs a desktop entry and an icon for Padre.
+  - Add a Mail::SpamAssassin plugin, which installs an init script and additional
     documentation.
   - Don't prepend "perl-" to module names like "perl-ldap" that already start
     with "perl-".
