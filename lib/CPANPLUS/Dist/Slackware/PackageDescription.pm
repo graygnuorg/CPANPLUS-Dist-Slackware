@@ -485,7 +485,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::PackageDescription - Collect information on a package
+CPANPLUS::Dist::Slackware::PackageDescription - Collect information on a new Slackware compatible package
 
 =head1 VERSION
 
@@ -508,7 +508,7 @@ This document describes CPANPLUS::Dist::Slackware::PackageDescription version 1.
 
 =head1 DESCRIPTION
 
-This module gets information on a yet-to-be-created Slackware compatible
+This module gets information on a yet to be created Slackware compatible
 package.  The information is obtained from a CPANPLUS::Module object, the
 file system and the environment.  Among other things, the module translates a
 Perl distribution's name and version into a package name.  It tries to find a

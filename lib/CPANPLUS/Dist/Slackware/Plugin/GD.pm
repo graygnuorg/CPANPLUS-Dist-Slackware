@@ -62,7 +62,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::GD - Patch GD
+CPANPLUS::Dist::Slackware::Plugin::GD - Patch Build.PL and the tests
 
 =head1 VERSION
 

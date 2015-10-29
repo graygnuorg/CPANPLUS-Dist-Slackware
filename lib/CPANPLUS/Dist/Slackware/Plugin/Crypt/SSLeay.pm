@@ -40,7 +40,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay - Patch Crypt::SSLeay if necessary
+CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay - Patch Makefile.PL
 
 =head1 VERSION
 
@@ -55,7 +55,7 @@ This document describes CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay version
 
 CPANPLUS executes F<Makefile.PL> with C<do> but Crypt::SSLeay's F<Makefile.PL>
 exits without creating a F<Makefile> if the script is run in the context of
-another call.  Reported as bug #98108 at L<http://rt.cpan.org/>.
+C<do>.  Reported as bug #98108 at L<http://rt.cpan.org/>.
 
 =head1 SUBROUTINES/METHODS
 

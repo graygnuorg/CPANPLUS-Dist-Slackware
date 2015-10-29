@@ -43,7 +43,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::Net::Pcap - Patch Net::Pcap if necessary
+CPANPLUS::Dist::Slackware::Plugin::Net::Pcap - Patch Makefile.PL
 
 =head1 VERSION
 
