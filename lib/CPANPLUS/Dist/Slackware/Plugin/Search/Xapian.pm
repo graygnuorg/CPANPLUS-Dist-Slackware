@@ -42,7 +42,7 @@ __END__
 
 =head1 NAME
 
-CPANPLUS::Dist::Slackware::Plugin::Search::Xapian - Patch Makefile.PL if necessary
+CPANPLUS::Dist::Slackware::Plugin::Search::Xapian - Patch Makefile.PL
 
 =head1 VERSION
 
