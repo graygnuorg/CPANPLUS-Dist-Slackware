@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay;
 use strict;
 use warnings;
 
-our $VERSION = '1.023';
+our $VERSION = '1.024';
 
 use File::Spec qw();
 
@@ -44,7 +44,7 @@ CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay - Patch Makefile.PL
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay version 1.023.
+This document describes CPANPLUS::Dist::Slackware::Plugin::Crypt::SSLeay version 1.024.
 
 =head1 SYNOPSIS
 
