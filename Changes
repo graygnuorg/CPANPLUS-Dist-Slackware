@@ -1,10 +1,10 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.023  2015-08-18 09:12:53 CEST
+1.023  2015-11-01 10:13:52 CET
 
-  - XXX
   - Add a Search::Xapian plugin that fixes the distributions's Makefile.PL
     script.
+  - Update the documentation.
 
 1.022  2015-08-18 08:41:04 CEST
 
