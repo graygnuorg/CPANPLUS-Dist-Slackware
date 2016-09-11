@@ -1014,7 +1014,7 @@ This document describes CPANPLUS::Dist::Slackware version 1.024.
 
     ### using the command-line tool
     $ cpan2dist --format CPANPLUS::Dist::Slackware Some::Module
-    $ sudo /sbin/installpkg /tmp/perl-Some-Module-1.0-i486-1_CPANPLUS.tgz
+    $ sudo /sbin/installpkg /tmp/perl-Some-Module-1.0-i586-1_CPANPLUS.tgz
 
 =head1 DESCRIPTION
 
@@ -1272,7 +1272,7 @@ to F<$TMPDIR> or F</tmp>.
 
 =item B<ARCH>
 
-The package architecture.  Defaults to "i486" on x86-based platforms, to "arm"
+The package architecture.  Defaults to "i586" on x86-based platforms, to "arm"
 on ARM-based platforms and to the system's hardware identifier, i.e. the
 output of C<uname -m> on all other platforms.
 

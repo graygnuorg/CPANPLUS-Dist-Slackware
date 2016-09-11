@@ -96,7 +96,7 @@ sub arch {
     if ( !$arch ) {
         $arch = (POSIX::uname)[4];
         if ( $arch =~ /^i.86$/ ) {
-            $arch = 'i486';
+            $arch = 'i586';
         }
         elsif ( $arch =~ /^arm/ ) {
             $arch = 'arm';
@@ -559,7 +559,7 @@ Sets the package's build number.
 =item B<< $pkgdesc->arch >>
 
 Returns the package architecture.  If unset, either the value of C<$ENV{ARCH}>
-or a platform-specific identifier like "i486" is returned.
+or a platform-specific identifier like "i586" is returned.
 
 =item B<< $pkgdesc->tag >>
 
@@ -574,7 +574,7 @@ possible values are "tbz", "tlz" and "txz".
 =item B<< $pkgdesc->filename >>
 
 Returns the package's filename, e.g.
-F<perl-Some-Module-0.01-i486-1_CPANPLUS.tgz>.
+F<perl-Some-Module-0.01-i586-1_CPANPLUS.tgz>.
 
 =item B<< $pkgdesc->outputdir >>
 
@@ -584,7 +584,7 @@ F<$OUTPUT>, F<$TMPDIR> or F</tmp>.
 =item B<< $pkgdesc->outputname >>
 
 Returns the package's full filename, e.g.
-F</tmp/perl-Some-Module-0.01-i486-1_CPANPLUS.tgz>.
+F</tmp/perl-Some-Module-0.01-i586-1_CPANPLUS.tgz>.
 
 =item B<< $pkgdesc->docdir >>
 

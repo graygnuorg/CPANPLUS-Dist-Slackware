@@ -1,8 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.024  2015-11-01 10:59:09 CET
+1.024  2016-09-11 23:37:16 CEST
 
-  - XXX
+  - The package architecture now defaults to "i586" on x86-based platforms.
 
 1.023  2015-11-01 10:13:52 CET
 
