@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::GD;
 use strict;
 use warnings;
 
-our $VERSION = '1.024';
+our $VERSION = '1.025';
 
 use File::Spec qw();
 
@@ -66,7 +66,7 @@ CPANPLUS::Dist::Slackware::Plugin::GD - Patch Build.PL and the tests
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Plugin::GD version 1.024.
+This document describes CPANPLUS::Dist::Slackware::Plugin::GD version 1.025.
 
 =head1 SYNOPSIS
 
