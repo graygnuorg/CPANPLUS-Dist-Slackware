@@ -1,5 +1,6 @@
 requires 'perl', '5.012003';
 
+requires 'Config';
 requires 'CPANPLUS';
 requires 'Cwd';
 requires 'ExtUtils::Install';

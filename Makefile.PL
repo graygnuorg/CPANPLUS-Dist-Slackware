@@ -18,6 +18,7 @@ my %WriteMakefileArgs = (
   "NAME" => "CPANPLUS::Dist::Slackware",
   "PREREQ_PM" => {
     "CPANPLUS" => 0,
+    "Config" => 0,
     "Cwd" => 0,
     "ExtUtils::Install" => 0,
     "File::Find" => 0,
@@ -48,6 +49,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "CPANPLUS" => 0,
+  "Config" => 0,
   "Cwd" => 0,
   "ExtUtils::Install" => 0,
   "File::Find" => 0,

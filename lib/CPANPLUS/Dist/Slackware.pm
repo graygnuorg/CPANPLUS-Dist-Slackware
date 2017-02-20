@@ -12,6 +12,7 @@ use English qw( -no_match_vars );
 use CPANPLUS::Dist::Slackware::PackageDescription;
 use CPANPLUS::Error;
 
+use Config;
 use Cwd qw();
 use ExtUtils::Packlist;
 use File::Find qw();
@@ -187,23 +188,36 @@ sub _call_plugins {
     return 1;
 }
 
+sub _mandirs {
+    my $dist = shift;
+
+    my %mandir = map {
+        my $dir = $Config{"vendorman${_}direxp"};
+        $dir =~ s,/usr/share/man/,/usr/man/,;
+        $_ => $dir
+    } ( 1, 3 );
+    return %mandir;
+}
+
 sub _perl_mm_opt {
     my $dist = shift;
 
-    return << 'END_PERL_MM_OPT';
+    my %mandir = $dist->_mandirs;
+    return << "END_PERL_MM_OPT";
 INSTALLDIRS=vendor
-INSTALLVENDORMAN1DIR=/usr/man/man1
-INSTALLVENDORMAN3DIR=/usr/man/man3
+INSTALLVENDORMAN1DIR='$mandir{1}'
+INSTALLVENDORMAN3DIR='$mandir{3}'
 END_PERL_MM_OPT
 }
 
 sub _perl_mb_opt {
     my $dist = shift;
 
-    return << 'END_PERL_MB_OPT';
+    my %mandir = $dist->_mandirs;
+    return << "END_PERL_MB_OPT";
 --installdirs vendor
---config installvendorman1dir=/usr/man/man1
---config installvendorman3dir=/usr/man/man3
+--config installvendorman1dir='$mandir{1}'
+--config installvendorman3dir='$mandir{3}'
 END_PERL_MB_OPT
 }
 
@@ -387,8 +401,9 @@ sub _compress_manual_pages {
     my $status  = $dist->status;
     my $pkgdesc = $status->_pkgdesc;
 
-    my $mandir = File::Spec->catdir( $pkgdesc->destdir, 'usr', 'man' );
-    return 1 if !-d $mandir;
+    my %mandir = $dist->_mandirs;
+    my @mandirs = grep { -d $_ }
+        map { File::Spec->catdir( $pkgdesc->destdir, $_ ) } values %mandir;
 
     my $fail   = 0;
     my $wanted = sub {
@@ -419,7 +434,7 @@ sub _compress_manual_pages {
             }
         }
     };
-    File::Find::find( $wanted, $mandir );
+    File::Find::find( $wanted, @mandirs );
 
     return ( $fail ? 0 : 1 );
 }
@@ -466,43 +481,6 @@ sub _install_docfiles {
     return ( $fail ? 0 : 1 );
 }
 
-sub _verify_filename {
-    my ( $dist, $filename ) = @_;
-
-    my $status  = $dist->status;
-    my $pkgdesc = $status->_pkgdesc;
-    my $name    = $pkgdesc->normalized_name;
-
-    my $general_whitelist = qr{ /(?:etc|usr|var|opt)/ }xms;
-
-    my $standard_whitelist = qr{
-        ^(?:
-            /etc/
-            | /usr/$
-            | /usr/(?:bin|doc|man)/
-            | /usr/(?:lib(?:64)?|share)/$
-            | /usr/(?:lib(?:64)?|share)/perl5/
-        )
-    }xms;
-
-    my $command = qr{ /usr/bin/. }xms;
-
-    $filename = substr $filename, 1;    # Remove leading '.'.
-    if ( $filename !~ $general_whitelist ) {
-        error(
-            loc( q{Blacklisted file found in '%1': '%2'}, $name, $filename )
-        );
-        return;
-    }
-    elsif ( $filename =~ $command ) {
-        msg( loc( q{'%1' provides command '%2'}, $name, $filename ) );
-    }
-    elsif ( $filename !~ $standard_whitelist ) {
-        msg( loc( q{'%1' provides extra file '%2'}, $name, $filename ) );
-    }
-    return 1;
-}
-
 sub _process_packlist {
     my ( $dist, $filename ) = @_;
 
@@ -523,7 +501,7 @@ sub _process_packlist {
             $key =~ s{^\Q$destdir\E}{}xms;
 
             # Add .gz to manual pages.
-            if ( $key =~ m{^/usr/man/}xms ) {
+            if ( $key =~ m{/man/man}xms ) {
                 if ( $key !~ m{\.gz$}xms ) {
                     $key .= '.gz';
                 }
@@ -533,7 +511,7 @@ sub _process_packlist {
                         && defined $value->{from} )
                     {
                         my $from = $value->{from};
-                        if ( $from =~ m{^/usr/man/}xms ) {
+                        if ( $from =~ m{/man/man}xms ) {
                             if ( $from !~ m{\.gz$}xms ) {
                                 $from .= '.gz';
                                 $value->{from} = $from;
@@ -576,16 +554,6 @@ sub _process_installed_files {
 
         my @stat = $dist->_lstat($filename);
         return if !@stat;
-
-        # Check whether the distribution tries to install files in
-        # non-standard directories.
-        my $pathname = $File::Find::name;
-        if ( -d _ ) {
-            $pathname .= q{/};
-        }
-        if ( !$dist->_verify_filename($pathname) ) {
-            ++$fail;
-        }
 
         # Skip symbolic links.
         return if -l _;
@@ -1199,11 +1167,6 @@ You are using CPANPLUS as a non-root user but C<sudo> is not installed.
 =item B<< You do not have '/sbin/makepkg'... >>
 
 The Slackware Linux package management tools are not installed.
-
-=item B<< Blacklisted file found... >>
-
-Distributions are not allowed to install files outside of F</etc>, F</usr>,
-F</var> and F</opt>.
 
 =item B<< Could not chdir into DIR >>
 

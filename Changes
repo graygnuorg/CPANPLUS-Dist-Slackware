@@ -1,5 +1,9 @@
 Revision history for CPANPLUS-Dist-Slackware
 
+1.025  2017-02-21 00:28:00 CET
+
+  - Support prefixes other than /usr, e.g. /opt/cperl.
+
 1.024  2016-09-11 23:37:16 CEST
 
   - The package architecture now defaults to "i586" on x86-based platforms.
