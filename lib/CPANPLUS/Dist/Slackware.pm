@@ -205,8 +205,8 @@ sub _perl_mm_opt {
     my %mandir = $dist->_mandirs;
     return << "END_PERL_MM_OPT";
 INSTALLDIRS=vendor
-INSTALLVENDORMAN1DIR='$mandir{1}'
-INSTALLVENDORMAN3DIR='$mandir{3}'
+INSTALLVENDORMAN1DIR=$mandir{1}
+INSTALLVENDORMAN3DIR=$mandir{3}
 END_PERL_MM_OPT
 }
 
@@ -216,8 +216,8 @@ sub _perl_mb_opt {
     my %mandir = $dist->_mandirs;
     return << "END_PERL_MB_OPT";
 --installdirs vendor
---config installvendorman1dir='$mandir{1}'
---config installvendorman3dir='$mandir{3}'
+--config installvendorman1dir=$mandir{1}
+--config installvendorman3dir=$mandir{3}
 END_PERL_MB_OPT
 }
 
