@@ -4,7 +4,7 @@
       "Andreas Voegele <voegelas@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 6.008, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.009, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -32,7 +32,7 @@
       },
       "runtime" : {
          "requires" : {
-            "CPANPLUS" : "0",
+            "CPANPLUS" : "0.9166",
             "Config" : "0",
             "Cwd" : "0",
             "ExtUtils::Install" : "0",
@@ -68,6 +68,6 @@
       }
    },
    "version" : "1.025",
-   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0227"
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0231"
 }
 

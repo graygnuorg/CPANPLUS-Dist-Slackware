@@ -1,7 +1,7 @@
 requires 'perl', '5.012003';
 
 requires 'Config';
-requires 'CPANPLUS';
+requires 'CPANPLUS', '0.9166';
 requires 'Cwd';
 requires 'ExtUtils::Install';
 requires 'File::Find';

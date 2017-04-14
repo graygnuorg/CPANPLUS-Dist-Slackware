@@ -53,12 +53,10 @@ sub init {
     my $status = $dist->status;
 
     $status->mk_accessors(
-        qw(_pkgdesc _fakeroot_cmd _file_cmd _run_perl_cmd _strip_cmd _plugins)
-    );
+        qw(_pkgdesc _fakeroot_cmd _file_cmd _strip_cmd _plugins) );
 
     $status->_fakeroot_cmd( IPC::Cmd::can_run('fakeroot') );
     $status->_file_cmd( IPC::Cmd::can_run('file') );
-    $status->_run_perl_cmd( IPC::Cmd::can_run('cpanp-run-perl') );
     $status->_strip_cmd( IPC::Cmd::can_run('strip') );
 
     $status->_plugins( [ grep { $_->available($dist) } $dist->plugins ] );
@@ -221,21 +219,6 @@ sub _perl_mb_opt {
 END_PERL_MB_OPT
 }
 
-sub _run_perl {
-    my $dist = shift;
-
-    my $status = $dist->status;
-
-    my $run_perl_cmd = $status->_run_perl_cmd;
-    return $run_perl_cmd if $run_perl_cmd;
-
-    my $perl_wrapper
-        = 'use strict; BEGIN { my $old = select STDERR; $|++;'
-        . ' select $old; $|++; $0 = shift(@ARGV); my $rv = do($0);'
-        . ' die $@ if $@; }';
-    return ( '-e', $perl_wrapper );
-}
-
 sub _fake_install {
     my ( $dist, $param_ref ) = @_;
 
@@ -260,10 +243,10 @@ sub _fake_install {
         $cmd = [ $make, 'install', "DESTDIR=$destdir" ];
     }
     elsif ( $installer_type eq 'CPANPLUS::Dist::Build' ) {
-        my $perl     = $param_ref->{perl};
-        my @run_perl = $dist->_run_perl;
+        my $perl = $param_ref->{perl};
         $cmd = [
-            $perl, @run_perl, 'Build', 'install', '--destdir', $destdir,
+            $perl, '-MCPANPLUS::Internals::Utils::Autoflush',
+            'Build', 'install', '--destdir', $destdir,
             split( ' ', $dist->_perl_mb_opt )
         ];
     }
