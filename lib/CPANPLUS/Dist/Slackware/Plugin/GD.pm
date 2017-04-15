@@ -5,7 +5,8 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use File::Spec qw();
+use File::Spec::Functions qw(catfile);
+use CPANPLUS::Dist::Slackware::Util qw(slurp spurt);
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -31,26 +32,26 @@ sub pre_prepare {
     return if !$wrksrc;
 
     # Only install the bdf2gdfont.pl script.
-    my $build_pl = File::Spec->catfile( $wrksrc, 'Build.PL' );
+    my $build_pl = catfile( $wrksrc, 'Build.PL' );
     if ( -f $build_pl ) {
-        my $code = $dist->_read_file($build_pl);
+        my $code = slurp($build_pl);
         if ( $code =~ /script_files \s+ => \s+ 'bdf_scripts'/xms ) {
             $code =~ s{
                 (script_files \s+ => \s+) 'bdf_scripts'
             }{$1 'bdf_scripts/bdf2gdfont.pl'}xms;
             $cb->_move( file => $build_pl, to => "$build_pl.orig" ) or return;
-            $dist->_write_file( $build_pl, $code ) or return;
+            spurt( $build_pl, $code ) or return;
         }
     }
 
     # Force the test suite to recreate the test image files.
-    my $gd_t = File::Spec->catfile( $wrksrc, 't', 'GD.t' );
+    my $gd_t = catfile( $wrksrc, 't', 'GD.t' );
     if ( -f $gd_t ) {
-        my $code = $dist->_read_file($gd_t);
+        my $code = slurp($gd_t);
         if ( $code =~ /if \(defined \$arg && \$arg eq '--write'\)/ ) {
             $code =~ s{if \(defined \$arg && \$arg eq '--write'\)}{if (1)};
             $cb->_move( file => $gd_t, to => "$gd_t.orig" ) or return;
-            $dist->_write_file( $gd_t, $code ) or return;
+            spurt( $gd_t, $code ) or return;
         }
     }
 

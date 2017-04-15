@@ -5,7 +5,8 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use File::Spec qw();
+use File::Spec::Functions qw(catfile);
+use CPANPLUS::Dist::Slackware::Util qw(slurp spurt);
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -23,14 +24,14 @@ sub pre_prepare {
 
     # See L<http://trac.xapian.org/ticket/692>.
     my $offending_code = qr/if \(defined \$builddir\)/;
-    my $filename = File::Spec->catfile( $wrksrc, 'Makefile.PL' );
+    my $filename = catfile( $wrksrc, 'Makefile.PL' );
     if ( -f $filename ) {
-        my $code = $dist->_read_file($filename);
+        my $code = slurp($filename);
         if ( $code =~ $offending_code ) {
             $code
                 =~ s/$offending_code/if (defined \$builddir && \$builddir ne \$srcdir)/;
             $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-            $dist->_write_file( $filename, $code ) or return;
+            spurt( $filename, $code ) or return;
         }
     }
 

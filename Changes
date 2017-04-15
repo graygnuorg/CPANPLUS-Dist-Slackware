@@ -1,7 +1,8 @@
 Revision history for CPANPLUS-Dist-Slackware
 
-1.025  2017-04-13 11:52:00 CEST
+1.025  2017-04-15 17:34:00 CEST
 
+  - Add CPANPLUS::Dist::Slackware::Util.
   - Remove the Crypt::SSLeay plugin.
   - Depend on CPANPLUS 0.9166, which provides Autoflush.
   - Support prefixes other than /usr, e.g. /opt/cperl.

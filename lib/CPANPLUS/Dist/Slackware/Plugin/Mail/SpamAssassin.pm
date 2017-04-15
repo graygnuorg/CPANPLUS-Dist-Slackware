@@ -5,7 +5,8 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use File::Spec qw();
+use File::Spec::Functions qw(catdir catfile);
+use CPANPLUS::Dist::Slackware::Util qw(slurp spurt run);
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -35,25 +36,23 @@ sub _install_init_script {
     return if !$wrksrc;
 
     my $script;
-    my $srcfile
-        = File::Spec->catdir( $wrksrc, 'spamd', 'slackware-rc-script.sh' );
+    my $srcfile = catfile( $wrksrc, 'spamd', 'slackware-rc-script.sh' );
     if ( -f $srcfile ) {
-        $script = $dist->_read_file($srcfile);
+        $script = slurp($srcfile);
     }
     if ($script) {
         $script =~ s/^SNAME=rc\.spamassassin/SNAME=rc.spamd/xms;
 
-        my $sysconfdir = File::Spec->catdir( $destdir, 'etc' );
+        my $sysconfdir = catdir( $destdir, 'etc' );
 
-        my $rcdir = File::Spec->catdir( $sysconfdir, 'rc.d' );
+        my $rcdir = catdir( $sysconfdir, 'rc.d' );
         $cb->_mkdir( dir => $rcdir ) or return;
 
-        my $initfile = File::Spec->catfile( $rcdir, 'rc.spamd' );
-        $dist->_write_file( $initfile, $script );
+        my $initfile = catfile( $rcdir, 'rc.spamd' );
+        spurt( $initfile, $script );
 
-        my $conffile
-            = File::Spec->catfile( $sysconfdir, 'spamassassin.conf' );
-        $dist->_write_file( $conffile, "ENABLED=1\n" );
+        my $conffile = catfile( $sysconfdir, 'spamassassin.conf' );
+        spurt( $conffile, "ENABLED=1\n" );
     }
 
     return 1;
@@ -70,11 +69,11 @@ sub _install_docfiles {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    my $docdir = File::Spec->catdir( $pkgdesc->destdir, $pkgdesc->docdir );
+    my $docdir = catdir( $pkgdesc->destdir, $pkgdesc->docdir );
 
     my $readme = $plugin->_readme_slackware_addendum;
-    my $readmefile = File::Spec->catfile( $docdir, 'README.SLACKWARE' );
-    $dist->_write_file( $readmefile, { append => 1 }, $readme ) or return;
+    my $readmefile = catfile( $docdir, 'README.SLACKWARE' );
+    spurt( $readmefile, { append => 1 }, $readme ) or return;
 
     my @docfiles = qw(
         INSTALL
@@ -92,7 +91,7 @@ sub _install_docfiles {
 
     my $fail = 0;
     for my $docfile (@docfiles) {
-        my $from = File::Spec->catfile( $wrksrc, $docfile );
+        my $from = catfile( $wrksrc, $docfile );
         if ( -f $from ) {
             if ( !$cb->_copy( file => $from, to => $docdir ) ) {
                 ++$fail;
@@ -100,7 +99,7 @@ sub _install_docfiles {
         }
         elsif ( -d $from ) {
             my $cmd = [ '/bin/cp', '-R', $from, $docdir ];
-            if ( !$dist->_run_command($cmd) ) {
+            if ( !run($cmd) ) {
                 ++$fail;
             }
         }
