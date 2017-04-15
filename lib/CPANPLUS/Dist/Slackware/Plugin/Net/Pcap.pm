@@ -22,15 +22,13 @@ sub pre_prepare {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    # See L<https://rt.cpan.org/Ticket/Display.html?id=73335>.
-    my $offending_code = qr/
-        \$options[{]CCFLAGS[}] \s* = \s* ["']-Wall \s+ -Wwrite-strings["'] .*?;
-    /xms;
-    my $filename = catfile( $wrksrc, 'Makefile.PL' );
+    # See L<https://rt.cpan.org/Ticket/Display.html?id=117831>.
+    my $offending_code = qr{\^(\Q(?:parse|syntax)\E)}xms;
+    my $filename = catfile( $wrksrc, 't', '09-error.t' );
     if ( -f $filename ) {
         my $code = slurp($filename);
         if ( $code =~ $offending_code ) {
-            $code =~ s/$offending_code//;
+            $code =~ s/$offending_code/$1/;
             $cb->_move( file => $filename, to => "$filename.orig" ) or return;
             spurt( $filename, $code ) or return;
         }
