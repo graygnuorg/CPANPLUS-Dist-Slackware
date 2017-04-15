@@ -55,7 +55,8 @@ This document describes CPANPLUS::Dist::Slackware::Plugin::Net::Pcap version 1.0
 
 =head1 DESCRIPTION
 
-Fix the libpcap detection.  Reported as bug #73335 at L<http://rt.cpan.org/>.
+Adapt a test to libpcap 1.8.0.  See bug #117831 at L<http://rt.cpan.org/> for
+more information.
 
 =head1 SUBROUTINES/METHODS
 
@@ -67,7 +68,7 @@ Returns true if this plugin applies to the given Perl distribution.
 
 =item B<< $plugin->pre_prepare($dist) >>
 
-Patch F<Makefile.PL> if necessary.
+Patch F<t/09-error.t> if necessary.
 
 =back
 
