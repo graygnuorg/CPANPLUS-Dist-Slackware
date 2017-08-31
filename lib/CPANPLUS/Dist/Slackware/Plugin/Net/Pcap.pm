@@ -5,8 +5,7 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use File::Spec::Functions qw(catfile);
-use CPANPLUS::Dist::Slackware::Util qw(slurp spurt);
+use CPANPLUS::Dist::Slackware::Util qw(catfile slurp spurt);
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -82,7 +81,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the module File::Spec.
+None.
 
 =head1 INCOMPATIBILITIES
 

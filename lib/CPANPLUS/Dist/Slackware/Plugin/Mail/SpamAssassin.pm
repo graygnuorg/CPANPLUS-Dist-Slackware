@@ -5,8 +5,7 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use File::Spec::Functions qw(catdir catfile);
-use CPANPLUS::Dist::Slackware::Util qw(slurp spurt run);
+use CPANPLUS::Dist::Slackware::Util qw(catdir catfile slurp spurt run);
 
 sub available {
     my ( $plugin, $dist ) = @_;
@@ -236,7 +235,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the module File::Spec and the command C<cp>.
+Requires the command C<cp>.
 
 =head1 INCOMPATIBILITIES
 

@@ -7,7 +7,8 @@ our $VERSION = '1.025';
 
 use English qw( -no_match_vars );
 
-use File::Spec qw();
+use CPANPLUS::Dist::Slackware::Util qw(catdir catfile tmpdir);
+
 use File::Temp qw();
 use Module::CoreList qw();
 use Pod::Find qw();
@@ -128,7 +129,7 @@ sub filename {
 
 sub outputdir {
     my $self = shift;
-    return $self->{outputdir} || $ENV{OUTPUT} || File::Spec->tmpdir;
+    return $self->{outputdir} || $ENV{OUTPUT} || tmpdir();
 }
 
 sub outputname {
@@ -136,15 +137,14 @@ sub outputname {
     my $outputname = $self->filename;
     my $outputdir  = $self->outputdir;
     if ($outputdir) {
-        $outputname = File::Spec->catfile( $outputdir, $outputname );
+        $outputname = catfile( $outputdir, $outputname );
     }
     return $outputname;
 }
 
 sub docdir {
     my $self = shift;
-    return $self->{docdir}
-        || File::Spec->catfile( '/usr/doc', $self->distname );
+    return $self->{docdir} || catfile( '/usr/doc', $self->distname );
 }
 
 sub docfiles {
@@ -169,7 +169,7 @@ sub docfiles {
                 | THANKS
                 | TODO
             )$
-        }xi && -f File::Spec->catfile( $wrksrc, $_ )
+        }xi && -f catfile( $wrksrc, $_ )
     } readdir $dh;
     closedir $dh;
     return @docfiles;
@@ -185,9 +185,7 @@ sub _summary_from_pod {
 
     my $summary = q{};
     my @dirs    = (
-        map { File::Spec->catdir( $wrksrc, $_ ) }
-            qw(blib/lib blib/bin lib bin),
-        $wrksrc
+        map { catdir( $wrksrc, $_ ) } qw(blib/lib blib/bin lib bin), $wrksrc
     );
     my $podfile = Pod::Find::pod_where( { -dirs => \@dirs }, $srcname );
     if ($podfile) {
@@ -216,7 +214,7 @@ sub _summary_from_meta {
 
     my $summary = q{};
     for (qw(META.yml META.json)) {
-        my $metafile = File::Spec->catfile( $wrksrc, $_ );
+        my $metafile = catfile( $wrksrc, $_ );
         if ( -f $metafile ) {
             my $distmeta;
             eval { $distmeta = Parse::CPAN::Meta::LoadFile($metafile) }
@@ -466,8 +464,7 @@ sub destdir {
     my $destdir = $self->{destdir};
     if ( !$destdir ) {
         my $template = 'package-' . $self->normalized_name . '-XXXXXXXXXX';
-        my $wrkdir   = $ENV{TMP}
-            || File::Spec->catdir( File::Spec->tmpdir, 'CPANPLUS' );
+        my $wrkdir = $ENV{TMP} || catdir( tmpdir(), 'CPANPLUS' );
         if ( !-d $wrkdir ) {
             $cb->_mkdir( dir => $wrkdir )
                 or die "Could not create directory '$wrkdir': $OS_ERROR\n";
@@ -651,9 +648,8 @@ See above and CPANPLUS::Dist::Slackware for supported environment variables.
 
 =head1 DEPENDENCIES
 
-Requires the modules File::Spec, File::Temp, Pod::Find, Pod::Simple, POSIX,
-Text::Wrap, and version 0.77.  If available, the module Parse::CPAN::Meta is
-used.
+Requires the modules File::Temp, Pod::Find, Pod::Simple, POSIX, Text::Wrap,
+and version 0.77.  If available, the module Parse::CPAN::Meta is used.
 
 =head1 INCOMPATIBILITIES
 

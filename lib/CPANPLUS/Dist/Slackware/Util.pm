@@ -7,24 +7,21 @@ our $VERSION = '1.025';
 
 use parent qw(Exporter);
 
-our @EXPORT_OK = qw(can_run run slurp spurt filetype gzip strip);
+our @EXPORT_OK
+    = qw(can_run run catdir catfile tmpdir slurp spurt filetype gzip strip);
 
 use English qw( -no_match_vars );
 
 use CPANPLUS::Error;
 
 use Cwd qw();
+use File::Spec::Functions qw(catdir catfile tmpdir);
 use IO::Compress::Gzip qw();
-use IPC::Cmd qw();
+use IPC::Cmd qw(can_run);
 use Locale::Maketext::Simple ( Style => 'gettext' );
 
 my $file_cmd  = can_run('file');
 my $strip_cmd = can_run('strip');
-
-sub can_run {
-    my $cmd = shift;
-    return IPC::Cmd::can_run($cmd);
-}
 
 sub run {
     my ( $cmd, $param_ref ) = @_;
@@ -271,7 +268,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the modules Cwd, IO::Compress::Gzip, IPC:Cmd,
+Requires the modules Cwd, File::Spec, IO::Compress::Gzip, IPC:Cmd,
 Locale::Maketext::Simple and the commands C<file> and C<strip>.
 
 =head1 INCOMPATIBILITIES

@@ -10,14 +10,14 @@ use parent qw(CPANPLUS::Dist::Base);
 use English qw( -no_match_vars );
 
 use CPANPLUS::Dist::Slackware::PackageDescription;
-use CPANPLUS::Dist::Slackware::Util qw(can_run run spurt filetype gzip strip);
+use CPANPLUS::Dist::Slackware::Util
+    qw(can_run run catdir catfile spurt filetype gzip strip);
 use CPANPLUS::Error;
 
 use Config;
 use Cwd qw();
 use ExtUtils::Packlist;
 use File::Find qw();
-use File::Spec::Functions qw(catdir catfile);
 use Locale::Maketext::Simple ( Style => 'gettext' );
 use Module::Pluggable require => 1;
 use Params::Check qw();
@@ -1002,8 +1002,7 @@ you must have C<sudo> and, optionally, C<fakeroot>.  You can download a script
 that builds C<fakeroot> from L<http://slackbuilds.org/>.
 
 CPANPLUS::Dist::Slackware requires the modules CPANPLUS, Cwd, File::Find,
-File::Spec, IO::Compress::Gzip, IPC:Cmd, Locale::Maketext::Simple, and
-Params::Check.
+IO::Compress::Gzip, IPC:Cmd, Locale::Maketext::Simple, and Params::Check.
 
 =head1 INCOMPATIBILITIES
 
