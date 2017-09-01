@@ -14,23 +14,21 @@ sub available {
         eval 'class foo { has $bar }';
         return ( $@ eq '' );
     }
+
     return;
 }
 
 sub pre_prepare {
     my ( $plugin, $dist ) = @_;
 
-    my $module = $dist->parent;
-    my $wrksrc = $module->status->extract;
-    return if !$wrksrc;
-
-    my $fn = catfile( $wrksrc, 'lib', 'B', 'Keywords.pm' );
+    # See L<http://perl11.org/cperl/perlclass.html>.
+    my $fn = catfile( 'lib', 'B', 'Keywords.pm' );
     if ( -f $fn ) {
         my $code = slurp($fn);
-        $code =~ s/\b (and) \b (\s+) \b (cmp) \b/$1$2class$2$3/xm;
-        $code =~ s/\b (gt) \b (\s+) \b (if) \b/$1$2has$2$3/xm;
-        $code =~ s/\b (m) \b (\s+) \b (ne) \b/$1$2method$2multi$2$3/xm;
-        $code =~ s/\b (qx) \b (\s+) \b (s) \b/$1$2role$2$3/xm;
+        $code =~ s/\b (and) \b (\s+) \b (cmp) \b/$1$2class$2$3/xms;
+        $code =~ s/\b (gt) \b (\s+) \b (if) \b/$1$2has$2$3/xms;
+        $code =~ s/\b (m) \b (\s+) \b (ne) \b/$1$2method$2multi$2$3/xms;
+        $code =~ s/\b (qx) \b (\s+) \b (s) \b/$1$2role$2$3/xms;
         spurt( $fn, $code ) or return;
     }
 

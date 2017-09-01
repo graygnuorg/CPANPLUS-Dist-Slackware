@@ -9,6 +9,7 @@ use CPANPLUS::Dist::Slackware::Util qw(catdir catfile slurp spurt run);
 
 sub available {
     my ( $plugin, $dist ) = @_;
+
     return ( $dist->parent->package_name eq 'Mail-SpamAssassin' );
 }
 
@@ -31,11 +32,8 @@ sub _install_init_script {
 
     my $destdir = $pkgdesc->destdir;
 
-    my $wrksrc = $module->status->extract;
-    return if !$wrksrc;
-
     my $script;
-    my $srcfile = catfile( $wrksrc, 'spamd', 'slackware-rc-script.sh' );
+    my $srcfile = catfile( 'spamd', 'slackware-rc-script.sh' );
     if ( -f $srcfile ) {
         $script = slurp($srcfile);
     }
@@ -65,9 +63,6 @@ sub _install_docfiles {
     my $cb      = $module->parent;
     my $pkgdesc = $status->_pkgdesc;
 
-    my $wrksrc = $module->status->extract;
-    return if !$wrksrc;
-
     my $docdir = catdir( $pkgdesc->destdir, $pkgdesc->docdir );
 
     my $readme = $plugin->_readme_slackware_addendum;
@@ -90,17 +85,8 @@ sub _install_docfiles {
 
     my $fail = 0;
     for my $docfile (@docfiles) {
-        my $from = catfile( $wrksrc, $docfile );
-        if ( -f $from ) {
-            if ( !$cb->_copy( file => $from, to => $docdir ) ) {
-                ++$fail;
-            }
-        }
-        elsif ( -d $from ) {
-            my $cmd = [ '/bin/cp', '-R', $from, $docdir ];
-            if ( !run($cmd) ) {
-                ++$fail;
-            }
+        if ( !run( [ '/bin/cp', '-R', $docfile, $docdir ] ) ) {
+            ++$fail;
         }
     }
 

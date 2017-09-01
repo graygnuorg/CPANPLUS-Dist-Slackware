@@ -9,28 +9,19 @@ use CPANPLUS::Dist::Slackware::Util qw(catfile slurp spurt);
 
 sub available {
     my ( $plugin, $dist ) = @_;
+
     return ( $dist->parent->package_name eq 'Net-Pcap' );
 }
 
 sub pre_prepare {
     my ( $plugin, $dist ) = @_;
 
-    my $module = $dist->parent;
-    my $cb     = $module->parent;
-
-    my $wrksrc = $module->status->extract;
-    return if !$wrksrc;
-
     # See L<https://rt.cpan.org/Ticket/Display.html?id=117831>.
-    my $offending_code = qr{\^(\Q(?:parse|syntax)\E)}xms;
-    my $filename = catfile( $wrksrc, 't', '09-error.t' );
-    if ( -f $filename ) {
-        my $code = slurp($filename);
-        if ( $code =~ $offending_code ) {
-            $code =~ s/$offending_code/$1/;
-            $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-            spurt( $filename, $code ) or return;
-        }
+    my $fn = catfile( 't', '09-error.t' );
+    if ( -f $fn ) {
+        my $code = slurp($fn);
+        $code =~ s/\^(\Q(?:parse|syntax)\E)/$1/xms;
+        spurt( $fn, $code ) or return;
     }
 
     return 1;

@@ -9,29 +9,19 @@ use CPANPLUS::Dist::Slackware::Util qw(catfile slurp spurt);
 
 sub available {
     my ( $plugin, $dist ) = @_;
+
     return ( $dist->parent->package_name eq 'Search-Xapian' );
 }
 
 sub pre_prepare {
     my ( $plugin, $dist ) = @_;
 
-    my $module = $dist->parent;
-    my $cb     = $module->parent;
-
-    my $wrksrc = $module->status->extract;
-    return if !$wrksrc;
-
     # See L<http://trac.xapian.org/ticket/692>.
-    my $offending_code = qr/if \(defined \$builddir\)/;
-    my $filename = catfile( $wrksrc, 'Makefile.PL' );
-    if ( -f $filename ) {
-        my $code = slurp($filename);
-        if ( $code =~ $offending_code ) {
-            $code
-                =~ s/$offending_code/if (defined \$builddir && \$builddir ne \$srcdir)/;
-            $cb->_move( file => $filename, to => "$filename.orig" ) or return;
-            spurt( $filename, $code ) or return;
-        }
+    my $fn = 'Makefile.PL';
+    if ( -f $fn ) {
+        my $code = slurp($fn);
+        $code =~ s/(if \(defined \$builddir)\)/$1 && \$builddir ne \$srcdir)/;
+        spurt( $fn, $code ) or return;
     }
 
     return 1;

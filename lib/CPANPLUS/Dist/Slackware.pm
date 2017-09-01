@@ -173,12 +173,19 @@ sub _call_plugins {
     my ( $dist, $method ) = @_;
 
     my $status = $dist->status;
+    my $module = $dist->parent;
+
+    my $orig_dir = Cwd::cwd();
+    chdir $module->status->extract or return;
 
     for my $plugin ( @{ $status->_plugins } ) {
         if ( $plugin->can($method) ) {
             $plugin->$method($dist) or return;
         }
     }
+
+    chdir $orig_dir or return;
+
     return 1;
 }
 
