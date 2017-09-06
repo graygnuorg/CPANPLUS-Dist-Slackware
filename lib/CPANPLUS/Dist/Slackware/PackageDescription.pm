@@ -9,6 +9,7 @@ use English qw( -no_match_vars );
 
 use CPANPLUS::Dist::Slackware::Util qw(catdir catfile tmpdir);
 
+use Config;
 use File::Temp qw();
 use Module::CoreList qw();
 use Pod::Find qw();
@@ -144,7 +145,8 @@ sub outputname {
 
 sub docdir {
     my $self = shift;
-    return $self->{docdir} || catfile( '/usr/doc', $self->distname );
+    return $self->{docdir}
+        || catfile( $Config{prefix}, 'doc', $self->distname );
 }
 
 sub docfiles {
