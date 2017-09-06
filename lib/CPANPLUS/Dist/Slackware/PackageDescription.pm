@@ -40,6 +40,12 @@ sub _normalize_name {
     if ( $name !~ /^perl-/ ) {
         $name = 'perl-' . $name;
     }
+
+    # Prepend "c" if the package is built for cperl.
+    if ( defined $Config{'usecperl'} ) {
+        $name = 'c' . $name;
+    }
+
     return $name;
 }
 
