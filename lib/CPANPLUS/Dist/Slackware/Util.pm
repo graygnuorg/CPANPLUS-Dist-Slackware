@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Util;
 use strict;
 use warnings;
 
-our $VERSION = '1.025';
+our $VERSION = '1.026';
 
 use base qw(Exporter);
 
@@ -183,7 +183,7 @@ CPANPLUS::Dist::Slackware::Util - Utility functions
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Util version 1.025.
+This document describes CPANPLUS::Dist::Slackware::Util version 1.026.
 
 =head1 SYNOPSIS
 
