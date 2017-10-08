@@ -1,5 +1,6 @@
-requires 'perl', '5.012003';
+requires 'perl', '5.006001';
 
+requires 'base';
 requires 'Config';
 requires 'CPANPLUS', '0.9166';
 requires 'Cwd';
@@ -13,12 +14,13 @@ requires 'Locale::Maketext::Simple';
 requires 'Module::CoreList', '2.32';
 requires 'Module::Pluggable';
 requires 'Params::Check';
-requires 'parent';
 requires 'Pod::Find';
 requires 'Pod::Simple';
 requires 'POSIX';
 requires 'Text::Wrap';
 requires 'version', '0.77';
+
+conflicts 'Module::Build', '< 0.36';
 
 on 'test' => sub {
     requires 'Test::More', '0.96';

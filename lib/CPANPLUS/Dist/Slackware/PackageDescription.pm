@@ -162,7 +162,7 @@ sub docfiles {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    opendir my $dh, $wrksrc or return;
+    opendir(my $dh, $wrksrc) or return;
     my @docfiles = grep {
         m{ ^(?:
                 AUTHORS
@@ -656,8 +656,7 @@ See above and CPANPLUS::Dist::Slackware for supported environment variables.
 
 =head1 DEPENDENCIES
 
-Requires the modules File::Temp, Pod::Find, Pod::Simple, POSIX, Text::Wrap,
-and version 0.77.  If available, the module Parse::CPAN::Meta is used.
+See CPANPLUS::Dist::Slackware.
 
 =head1 INCOMPATIBILITIES
 

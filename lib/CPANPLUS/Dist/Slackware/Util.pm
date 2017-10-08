@@ -5,7 +5,7 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use parent qw(Exporter);
+use base qw(Exporter);
 
 our @EXPORT_OK
     = qw(can_run run catdir catfile tmpdir slurp spurt filetype gzip strip);
@@ -268,8 +268,7 @@ None.
 
 =head1 DEPENDENCIES
 
-Requires the modules Cwd, File::Spec, IO::Compress::Gzip, IPC:Cmd,
-Locale::Maketext::Simple and the commands C<file> and C<strip>.
+See CPANPLUS::Dist::Slackware.
 
 =head1 INCOMPATIBILITIES
 

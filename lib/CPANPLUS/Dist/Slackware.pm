@@ -5,7 +5,7 @@ use warnings;
 
 our $VERSION = '1.025';
 
-use parent qw(CPANPLUS::Dist::Base);
+use base qw(CPANPLUS::Dist::Base);
 
 use English qw( -no_match_vars );
 
@@ -77,8 +77,8 @@ sub prepare {
     {
 
         # CPANPLUS::Dist:MM does not accept multiple options in
-        # makemakerflags.  Thus all options have to be passed via
-        # environment variables.
+        # makemakerflags.  Instead, the options are passed in PERL_MM_OPT.
+        # PERL_MB_OPT requires Module::Build 0.36.
         local $ENV{PERL_MM_OPT}   = $dist->_perl_mm_opt;
         local $ENV{PERL_MB_OPT}   = $dist->_perl_mb_opt;
         local $ENV{MODULEBUILDRC} = 'NONE';
@@ -194,6 +194,9 @@ sub _mandirs {
 
     my %mandir = map {
         my $dir = $Config{"vendorman${_}direxp"};
+        if ( !$dir ) {
+            $dir = catdir( $Config{'prefix'}, 'man', "man${_}" );
+        }
         $dir =~ s,/usr/share/man/,/usr/man/,;
         $_ => $dir
     } ( 1, 3 );
@@ -399,7 +402,9 @@ sub _compress_manual_pages {
             }
         }
     };
-    File::Find::find( $wanted, @mandirs );
+    if (@mandirs) {
+        File::Find::find( $wanted, @mandirs );
+    }
 
     return ( $fail ? 0 : 1 );
 }
@@ -1002,14 +1007,22 @@ C<xz>, needs to be installed on the machine.
 
 Requires the Slackware Linux package management tools C<makepkg>,
 C<installpkg>, C<updatepkg>, and C<removepkg>.  Other required commands are
-C<chown>, C<file>, C<gcc>, C<make>, and C<strip>.
+C<chown>, C<cp>, C<file>, C<make>, C<strip> and a C compiler.
 
 In order to manage packages as a non-root user, which is highly recommended,
 you must have C<sudo> and, optionally, C<fakeroot>.  You can download a script
 that builds C<fakeroot> from L<http://slackbuilds.org/>.
 
-CPANPLUS::Dist::Slackware requires the modules CPANPLUS, Cwd, File::Find,
-IO::Compress::Gzip, IPC:Cmd, Locale::Maketext::Simple, and Params::Check.
+Requires the modules CPANPLUS and Module::Pluggable from CPAN.
+
+The lowest supported Module::Build version is 0.36.
+
+The required modules Cwd, ExtUtils::Packlist, File::Find, File::Spec,
+File::Temp, IO::Compress::Gzip, IPC:Cmd, Locale::Maketext::Simple,
+Module::CoreList 2.32, Params::Check, Pod::Find, Pod::Simple, POSIX,
+Text::Wrap and version 0.77 are distributed with Perl 5.12.3 and above.
+
+If available, the module Parse::CPAN::Meta is used.
 
 =head1 INCOMPATIBILITIES
 
