@@ -154,6 +154,22 @@ sub installdirs {
     return $self->{installdirs};
 }
 
+sub prefix {
+    my $self = shift;
+
+    my $installdirs = $self->installdirs;
+
+    return $Config{"${installdirs}prefixexp"};
+}
+
+sub bindir {
+    my $self = shift;
+
+    my $installdirs = $self->installdirs;
+
+    return $Config{"${installdirs}binexp"};
+}
+
 sub mandirs {
     my $self = shift;
 
@@ -162,7 +178,7 @@ sub mandirs {
     my %mandir = map {
         my $dir = $Config{"${installdirs}man${_}direxp"};
         if ( !$dir ) {
-            $dir = catdir( $Config{'prefixexp'}, 'man', "man${_}" );
+            $dir = catdir( $self->prefix, 'man', "man${_}" );
         }
         $dir =~ s,/usr/share/man/,/usr/man/,;
         $_ => $dir
@@ -175,8 +191,7 @@ sub docdir {
 
     my $installdirs = $self->installdirs;
 
-    return catfile( $Config{"${installdirs}prefixexp"}, 'doc',
-        $self->distname );
+    return catfile( $self->prefix, 'doc', $self->distname );
 }
 
 sub docfiles {
@@ -622,10 +637,19 @@ F</tmp/perl-Some-Module-0.01-i586-1_CPANPLUS.tgz>.
 
 Returns "vendor" or "site".
 
+=item B<< $pkgdesc->prefix >>
+
+Returns the directory below which the package will be installed, e.g. "/usr"
+or "/usr/local".
+
+=item B<< $pkgdesc->bindir >>
+
+Returns the location of executables, e.g. "/usr/bin".
+
 =item B<< $pkgdesc->mandirs >>
 
 Returns a map of manual page directories, e.g. (1 => "/usr/man/man1", 3 =>
-"usr/man/man3").
+"/usr/man/man3").
 
 =item B<< $pkgdesc->docdir >>
 

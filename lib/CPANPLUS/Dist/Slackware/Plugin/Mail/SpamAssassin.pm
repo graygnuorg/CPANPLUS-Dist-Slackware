@@ -31,6 +31,7 @@ sub _install_init_script {
     my $pkgdesc = $status->_pkgdesc;
 
     my $destdir = $pkgdesc->destdir;
+    my $bindir  = $pkgdesc->bindir;
 
     my $script;
     my $srcfile = catfile( 'spamd', 'slackware-rc-script.sh' );
@@ -39,6 +40,7 @@ sub _install_init_script {
     }
     if ($script) {
         $script =~ s/^SNAME=rc\.spamassassin/SNAME=rc.spamd/xms;
+        $script =~ s%^DAEMON=/usr/bin/spamd%DAEMON=$bindir/spamd%xms;
 
         my $sysconfdir = catdir( $destdir, 'etc' );
 
