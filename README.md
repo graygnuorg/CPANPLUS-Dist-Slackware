@@ -1,4 +1,4 @@
-# CPANPLUS-Dist-Slackware
+# CPANPLUS::Dist::Slackware
 
 This CPANPLUS plugin creates [Slackware](http://www.slackware.com/) compatible
 packages from Perl distributions.  You can either install the created packages
