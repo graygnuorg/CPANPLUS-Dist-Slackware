@@ -14,7 +14,6 @@ use CPANPLUS::Dist::Slackware::Util
     qw(can_run run catdir catfile spurt filetype gzip strip);
 use CPANPLUS::Error;
 
-use Config;
 use Cwd qw();
 use ExtUtils::Packlist;
 use File::Find qw();
@@ -63,11 +62,14 @@ sub init {
 sub prepare {
     my ( $dist, @params ) = @_;
 
-    my $status = $dist->status;
-    my $module = $dist->parent;
+    my $param_ref = $dist->_parse_params(@params) or die;
+    my $status    = $dist->status;
+    my $module    = $dist->parent;
 
     my $pkgdesc = CPANPLUS::Dist::Slackware::PackageDescription->new(
-        module => $module );
+        module      => $module,
+        installdirs => $param_ref->{installdirs},
+    );
     $status->_pkgdesc($pkgdesc);
 
     $status->dist( $pkgdesc->outputname );
@@ -163,6 +165,10 @@ sub _parse_params {
             keep_source => { default => 0 },
             make        => { default => $conf->get_program('make') },
             perl        => { default => $EXECUTABLE_NAME },
+            installdirs => {
+                default => $ENV{INSTALLDIRS} || 'vendor',
+                allow => [ 'site', 'vendor' ]
+            },
         };
         $param_ref = Params::Check::check( $tmpl, \%params ) or return;
     }
@@ -189,39 +195,36 @@ sub _call_plugins {
     return 1;
 }
 
-sub _mandirs {
-    my $dist = shift;
-
-    my %mandir = map {
-        my $dir = $Config{"vendorman${_}direxp"};
-        if ( !$dir ) {
-            $dir = catdir( $Config{'prefix'}, 'man', "man${_}" );
-        }
-        $dir =~ s,/usr/share/man/,/usr/man/,;
-        $_ => $dir
-    } ( 1, 3 );
-    return %mandir;
-}
-
 sub _perl_mm_opt {
     my $dist = shift;
 
-    my %mandir = $dist->_mandirs;
+    my $status  = $dist->status;
+    my $pkgdesc = $status->_pkgdesc;
+
+    my $installdirs = $pkgdesc->installdirs;
+    my $INSTALLDIRS = uc $installdirs;
+    my %mandir      = $pkgdesc->mandirs;
+
     return << "END_PERL_MM_OPT";
-INSTALLDIRS=vendor
-INSTALLVENDORMAN1DIR=$mandir{1}
-INSTALLVENDORMAN3DIR=$mandir{3}
+INSTALLDIRS=$installdirs
+INSTALL${INSTALLDIRS}MAN1DIR=$mandir{1}
+INSTALL${INSTALLDIRS}MAN3DIR=$mandir{3}
 END_PERL_MM_OPT
 }
 
 sub _perl_mb_opt {
     my $dist = shift;
 
-    my %mandir = $dist->_mandirs;
+    my $status  = $dist->status;
+    my $pkgdesc = $status->_pkgdesc;
+
+    my $installdirs = $pkgdesc->{installdirs};
+    my %mandir      = $pkgdesc->mandirs;
+
     return << "END_PERL_MB_OPT";
---installdirs vendor
---config installvendorman1dir=$mandir{1}
---config installvendorman3dir=$mandir{3}
+--installdirs $installdirs
+--config install${installdirs}man1dir=$mandir{1}
+--config install${installdirs}man3dir=$mandir{3}
 END_PERL_MB_OPT
 }
 
@@ -388,7 +391,7 @@ sub _compress_manual_pages {
     my $status  = $dist->status;
     my $pkgdesc = $status->_pkgdesc;
 
-    my %mandir = $dist->_mandirs;
+    my %mandir = $pkgdesc->mandirs;
     my @mandirs = grep { -d $_ }
         map { catdir( $pkgdesc->destdir, $_ ) } values %mandir;
 
@@ -767,7 +770,9 @@ User settings are stored in F<$HOME/.cpanplus/lib/CPANPLUS/Config/User.pm>.
 
 Packages may also be created from the command-line.  Example:
 
-    $ cpan2dist --format CPANPLUS::Dist::Slackware Smart::Comments
+    $ cpan2dist --format CPANPLUS::Dist::Slackware \
+                --dist-opts installdirs=site \
+                Smart::Comments
     $ sudo /sbin/installpkg /tmp/perl-Smart-Comments-1.06-x86_64-1_CPANPLUS.tgz
 
 =head2 Managing packages as a non-root user
@@ -816,9 +821,10 @@ Runs C<perl Makefile.PL> or C<perl Build.PL> and determines what prerequisites
 this distribution declared.
 
     $success = $dist->prepare(
-        perl    => '/path/to/perl',
-        force   => (1|0),
-        verbose => (1|0)
+        perl        => '/path/to/perl',
+        force       => (1|0),
+        verbose     => (1|0),
+        installdirs => ('vendor'|'site')
     );
 
 If you set C<force> to true, it will go over all the stages of the C<prepare>
@@ -840,7 +846,7 @@ prerequisites the module may have.
         make        => '/path/to/make',
         skiptest    => (1|0),
         force       => (1|0),
-        verbose     => (1|0)
+        verbose     => (1|0),
         keep_source => (1|0)
     );
 
@@ -1000,6 +1006,10 @@ This tag is added to the package filename.  Defaults to "_CPANPLUS".
 The package extension.  Defaults to "tgz".  May be set to "tbz", "tlz" or
 "txz".  The proper compression utility, i.e. C<gzip>, C<bzip2>, C<lzma>, or
 C<xz>, needs to be installed on the machine.
+
+=item B<INSTALLDIRS>
+
+The installation destination. Can be "vendor" or "site". Defaults to "vendor".
 
 =back
 

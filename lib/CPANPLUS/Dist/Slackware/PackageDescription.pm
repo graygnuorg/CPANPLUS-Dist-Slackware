@@ -149,10 +149,34 @@ sub outputname {
     return $outputname;
 }
 
+sub installdirs {
+    my $self = shift;
+    return $self->{installdirs};
+}
+
+sub mandirs {
+    my $self = shift;
+
+    my $installdirs = $self->installdirs;
+
+    my %mandir = map {
+        my $dir = $Config{"${installdirs}man${_}direxp"};
+        if ( !$dir ) {
+            $dir = catdir( $Config{'prefixexp'}, 'man', "man${_}" );
+        }
+        $dir =~ s,/usr/share/man/,/usr/man/,;
+        $_ => $dir
+    } ( 1, 3 );
+    return %mandir;
+}
+
 sub docdir {
     my $self = shift;
-    return $self->{docdir}
-        || catfile( $Config{prefix}, 'doc', $self->distname );
+
+    my $installdirs = $self->installdirs;
+
+    return catfile( $Config{"${installdirs}prefixexp"}, 'doc',
+        $self->distname );
 }
 
 sub docfiles {
@@ -162,7 +186,8 @@ sub docfiles {
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
 
-    opendir(my $dh, $wrksrc) or return;
+    my $dh;
+    opendir( $dh, $wrksrc ) or return;
     my @docfiles = grep {
         m{ ^(?:
                 AUTHORS
@@ -364,10 +389,11 @@ sub slack_desc {
 }
 
 sub build_script {
-    my $self    = shift;
-    my $module  = $self->module;
-    my $name    = $module->package_name;
-    my $version = $module->package_version;
+    my $self        = shift;
+    my $module      = $self->module;
+    my $name        = $module->package_name;
+    my $version     = $module->package_version;
+    my $installdirs = $self->installdirs;
 
     # Quote single quotes.
     $name =~ s/('+)/'"$1"'/g;
@@ -377,7 +403,8 @@ sub build_script {
 #!/bin/sh
 SRCNAM='$name'
 VERSION=\${VERSION:-'$version'}
-cpan2dist --format CPANPLUS::Dist::Slackware \$SRCNAM-\$VERSION
+INSTALLDIRS=\${INSTALLDIRS:-$installdirs}
+cpan2dist --format CPANPLUS::Dist::Slackware --dist-opts installdirs=\$INSTALLDIRS \$SRCNAM-\$VERSION
 END_SCRIPT
 }
 
@@ -590,6 +617,15 @@ F<$OUTPUT>, F<$TMPDIR> or F</tmp>.
 
 Returns the package's full filename, e.g.
 F</tmp/perl-Some-Module-0.01-i586-1_CPANPLUS.tgz>.
+
+=item B<< $pkgdesc->installdirs >>
+
+Returns "vendor" or "site".
+
+=item B<< $pkgdesc->mandirs >>
+
+Returns a map of manual page directories, e.g. (1 => "/usr/man/man1", 3 =>
+"usr/man/man3").
 
 =item B<< $pkgdesc->docdir >>
 
