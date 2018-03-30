@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::PackageDescription;
 use strict;
 use warnings;
 
-our $VERSION = '1.026';
+our $VERSION = '1.027';
 
 use English qw( -no_match_vars );
 
@@ -536,7 +536,7 @@ CPANPLUS::Dist::Slackware::PackageDescription - Collect information on a new Sla
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::PackageDescription version 1.026.
+This document describes CPANPLUS::Dist::Slackware::PackageDescription version 1.027.
 
 =head1 SYNOPSIS
 
