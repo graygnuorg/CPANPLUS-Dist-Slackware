@@ -264,7 +264,7 @@ sub _fake_install {
         return;
     }
 
-    msg( loc( q{Staging distribution in '%2'}, $destdir ) );
+    msg( loc( q{Staging distribution in '%1'}, $destdir ) );
 
     return run( $cmd, { dir => $wrksrc, verbose => $verbose } );
 }
