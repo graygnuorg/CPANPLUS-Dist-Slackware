@@ -1,0 +1,10 @@
+image: perl:5.26
+
+before_script:
+  - cpanm --installdeps .
+  - perl Makefile.PL
+  - make
+
+test_job:
+  script:
+    - make test
