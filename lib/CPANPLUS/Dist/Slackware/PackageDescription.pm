@@ -736,7 +736,7 @@ Andreas Voegele E<lt>voegelas@cpan.orgE<gt>
 =head1 BUGS AND LIMITATIONS
 
 Please report any bugs to C<bug-cpanplus-dist-slackware at rt.cpan.org>, or
-through the web interface at L<http://rt.cpan.org/>.
+through the web interface at L<https://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -745,6 +745,6 @@ Copyright 2012-2020 Andreas Voegele
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
 
-See http://dev.perl.org/licenses/ for more information.
+See https://dev.perl.org/licenses/ for more information.
 
 =cut
