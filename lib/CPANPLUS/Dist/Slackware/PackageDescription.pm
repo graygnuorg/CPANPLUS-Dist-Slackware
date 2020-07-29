@@ -12,8 +12,6 @@ use CPANPLUS::Dist::Slackware::Util qw(catdir catfile tmpdir);
 use Config;
 use File::Temp qw();
 use Module::CoreList qw();
-use Pod::Find qw();
-use Pod::Simple::PullParser qw();
 use POSIX qw();
 use Text::Wrap qw($columns);
 use version 0.77 qw();
@@ -227,6 +225,11 @@ sub _summary_from_pod {
     my $self    = shift;
     my $module  = $self->module;
     my $srcname = $module->module;
+
+    eval {
+        require Pod::Find;
+        require Pod::Simple::PullParser;
+    } or return;
 
     my $wrksrc = $module->status->extract;
     return if !$wrksrc;
@@ -737,7 +740,7 @@ through the web interface at L<http://rt.cpan.org/>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012-2018 Andreas Voegele
+Copyright 2012-2020 Andreas Voegele
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
