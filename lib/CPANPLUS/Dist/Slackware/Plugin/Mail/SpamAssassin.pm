@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin;
 use strict;
 use warnings;
 
-our $VERSION = '1.029';
+our $VERSION = '1.030';
 
 use CPANPLUS::Dist::Slackware::Util qw(catdir catfile slurp spurt run);
 
@@ -187,7 +187,7 @@ CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin - Add an init script and d
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin version 1.029.
+This document describes CPANPLUS::Dist::Slackware::Plugin::Mail::SpamAssassin version 1.030.
 
 =head1 SYNOPSIS
 

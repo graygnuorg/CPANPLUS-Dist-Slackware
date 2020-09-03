@@ -3,7 +3,7 @@ package CPANPLUS::Dist::Slackware::Plugin::Search::Xapian;
 use strict;
 use warnings;
 
-our $VERSION = '1.029';
+our $VERSION = '1.030';
 
 use CPANPLUS::Dist::Slackware::Util qw(catfile slurp spurt);
 
@@ -36,7 +36,7 @@ CPANPLUS::Dist::Slackware::Plugin::Search::Xapian - Patch Makefile.PL
 
 =head1 VERSION
 
-This document describes CPANPLUS::Dist::Slackware::Plugin::Search::Xapian version 1.029.
+This document describes CPANPLUS::Dist::Slackware::Plugin::Search::Xapian version 1.030.
 
 =head1 SYNOPSIS
 
