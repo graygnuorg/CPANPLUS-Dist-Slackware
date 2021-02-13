@@ -1066,8 +1066,8 @@ Some Perl distributions fail to show interactive prompts if the C<verbose> optio
 is not set.  This problem has been reported as bug #47818 and bug #72095 at
 L<https://rt.cpan.org/>.
 
-Please report any bugs to C<bug-cpanplus-dist-slackware at rt.cpan.org>, or
-through the web interface at L<https://rt.cpan.org/>.
+Please report any bugs using the issue tracker at
+L<https://github.com/graygnuorg/CPANPLUS-Dist-Slackware/issues>.
 
 =head1 LICENSE AND COPYRIGHT
 
